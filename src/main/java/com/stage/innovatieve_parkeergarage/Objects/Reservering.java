@@ -17,6 +17,14 @@ public class Reservering {
         this.reservering_Auto = reservering_Auto;
     }
 
+    public Reservering(Parkeerplaats reservering_Parkeerplaats, String reservering_Begintijd, String reservering_Eindtijd, String reservering_Datum, Auto reservering_Auto) {
+        this.reservering_Parkeerplaats = reservering_Parkeerplaats;
+        this.reservering_Begintijd = reservering_Begintijd;
+        this.reservering_Eindtijd = reservering_Eindtijd;
+        this.reservering_Datum = reservering_Datum;
+        this.reservering_Auto = reservering_Auto;
+    }
+
     public int getReservering_Id() {
         return reservering_Id;
     }
