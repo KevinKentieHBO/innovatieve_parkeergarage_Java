@@ -22,9 +22,9 @@ public class BetaaltariefController {
         ArrayList<Betaaltarief> tarievenArray = betaaltariefdao.getAllBetaaltarief();
         for(Betaaltarief tarief : tarievenArray){
             JsonObject betaaltariefJson = new JsonObject();
-            betaaltariefJson.addProperty("id", tarief.getId());
-            betaaltariefJson.addProperty("type", tarief.getType());
-            betaaltariefJson.addProperty("waarde", tarief.getWaarde());
+            betaaltariefJson.addProperty("id", tarief.getBetaaltarief_Id());
+            betaaltariefJson.addProperty("type", tarief.getBetaaltarief_Type());
+            betaaltariefJson.addProperty("waarde", tarief.getBetaaltarief_Waarde());
             tariefJsonArray.add(betaaltariefJson);
         }
         return tariefJsonArray.toString();

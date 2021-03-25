@@ -1,25 +1,31 @@
 package com.stage.innovatieve_parkeergarage.Objects;
 
 public class Betaaltarief {
-    private int id;
-    private String Type;
-    private Double Waarde;
+    private int betaaltarief_Id;
+    private String betaaltarief_Type;
+    private Double betaaltarief_Waarde;
+    private Parkeergarage betaaltatief_Parkeergarage;
 
-    public Betaaltarief(int id, String type, Double waarde) {
-        this.id = id;
-        Type = type;
-        Waarde = waarde;
+    public Betaaltarief(int betaaltarief_Id, String betaaltarief_Type, Double betaaltarief_Waarde, Parkeergarage betaaltatief_Parkeergarage) {
+        this.betaaltarief_Id = betaaltarief_Id;
+        this.betaaltarief_Type = betaaltarief_Type;
+        this.betaaltarief_Waarde = betaaltarief_Waarde;
+        this.betaaltatief_Parkeergarage = betaaltatief_Parkeergarage;
     }
 
-    public int getId() {
-        return id;
+    public int getBetaaltarief_Id() {
+        return betaaltarief_Id;
     }
 
-    public String getType() {
-        return Type;
+    public String getBetaaltarief_Type() {
+        return betaaltarief_Type;
     }
 
-    public Double getWaarde() {
-        return Waarde;
+    public Double getBetaaltarief_Waarde() {
+        return betaaltarief_Waarde;
+    }
+
+    public Parkeergarage getBetaaltatief_Parkeergarage() {
+        return betaaltatief_Parkeergarage;
     }
 }

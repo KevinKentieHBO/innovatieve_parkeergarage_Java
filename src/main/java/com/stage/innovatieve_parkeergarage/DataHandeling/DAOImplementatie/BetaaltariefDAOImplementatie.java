@@ -20,7 +20,7 @@ public class BetaaltariefDAOImplementatie implements BetaaltariefDAO {
         ResultSet rs = statement.executeQuery("select * from Betaaltarief");
         ArrayList tarieven = new ArrayList<Betaaltarief>();
         while(rs.next()) {
-            Betaaltarief tarief = new Betaaltarief(rs.getInt(1), rs.getString(2), rs.getDouble(3));
+            Betaaltarief tarief = new Betaaltarief(rs.getInt(1), rs.getString(2), rs.getDouble(3),null);
             tarieven.add(tarief);
         }
         return tarieven;
