@@ -35,8 +35,8 @@ public class ReserveringController {
             reserveringDAO.CreateReservering(reservering);
             return true;
         }catch(Exception e){
-            System.out.println("Maken van een reservering is niet geslaagd.");
-            return false;
-        }
+        System.out.println("Reservering is niet aangemaakt : CONTROLLER");
+        return false;
+    }
     }
 }

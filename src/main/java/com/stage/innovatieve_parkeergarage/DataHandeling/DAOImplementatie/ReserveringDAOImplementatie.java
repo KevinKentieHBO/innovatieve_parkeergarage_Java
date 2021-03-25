@@ -16,11 +16,13 @@ public class ReserveringDAOImplementatie implements ReserveringDAO {
         try {
             Connection connection = new SQLite_Con().makeConnection();
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("INSERT INTO Reservering (Reservering_Parkeerplaats_Id, Reservering_Auto_Id, Reservering_Datum, Reservering_Begintijd, Reservering_Eindtijd) VALUES(" + reservering.getReservering_Parkeerplaats().getParkeerplaats_Id() + "," + reservering.getReservering_Auto().getAuto_Id() + ",'" + reservering.getReservering_Datum() + "','" + reservering.getReservering_Begintijd() + "','" + reservering.getReservering_Eindtijd() + "')");
+            statement.executeUpdate("INSERT INTO Reservering (Reservering_Parkeerplaats_Id, Reservering_Auto_Id, Reservering_Datum, Reservering_Begintijd, Reservering_Eindtijd) VALUES(" + reservering.getReservering_Parkeerplaats().getParkeerplaats_Id() + "," + reservering.getReservering_Auto().getAuto_Id() + ",'" + reservering.getReservering_Datum() + "','" + reservering.getReservering_Begintijd() + "','" + reservering.getReservering_Eindtijd() + "')");
+            connection.close();
             return true;
         }catch(Exception e){
-            System.out.println("Het maken van een reservering is niet gelukt");
+            System.out.println("Reservering is niet aangemaakt : SQL");
             return false;
         }
+
     }
 }

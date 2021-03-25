@@ -17,6 +17,8 @@ public class AutoDAOImplementatie implements AutoDAO {
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("select * from Auto WHERE Auto_Id = "+auto_Id);
         Auto auto = new Auto(rs.getInt(1),rs.getString(2));
+        rs.close();
+        connection.close();
         return auto;
     }
 }

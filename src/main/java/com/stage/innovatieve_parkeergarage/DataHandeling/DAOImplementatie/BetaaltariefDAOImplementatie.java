@@ -23,6 +23,8 @@ public class BetaaltariefDAOImplementatie implements BetaaltariefDAO {
             Betaaltarief tarief = new Betaaltarief(rs.getInt(1), rs.getString(2), rs.getDouble(3),null);
             tarieven.add(tarief);
         }
+        rs.close();
+        connection.close();
         return tarieven;
     }
 }
