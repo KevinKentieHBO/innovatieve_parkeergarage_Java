@@ -1,0 +1,25 @@
+package com.stage.innovatieve_parkeergarage.DataHandeling;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class SQLite_Con {
+    public Connection makeConnection() throws ClassNotFoundException {
+        Class.forName("org.sqlite.JDBC");
+        Connection connection = null;
+        try
+        {
+            // create a database connection
+            connection = DriverManager.getConnection("jdbc:sqlite:/Users/kevinkentie/Documents/Programmeren/SQLite Databases/Innovatieve_Parkeergarage.db");
+    }catch(SQLException e)
+        {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+        return connection;
+    }
+}
