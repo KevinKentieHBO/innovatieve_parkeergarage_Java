@@ -27,21 +27,20 @@ public class ReserveringController {
     ParkeerplaatsDAO parkeerplaatsDAO = new ParkeerplaatsDAOImplementatie();
     ReserveringDAO reserveringDAO = new ReserveringDAOImplementatie();
 
-    @GetMapping("/reservering/{datum}/{begintijd}/{eindtijd}/{autoid}")
+    @GetMapping("/reservering/{datum}/{begintijd}/{eindtijd}/{autoid}/{parkeergarageId}")
     public Boolean CatchReservering(@PathVariable String datum,
                                   @PathVariable String eindtijd,
                                   @PathVariable String begintijd,
-                                  @PathVariable int autoid) throws SQLException, ClassNotFoundException {
-        try {
+                                  @PathVariable int autoid,
+                                    @PathVariable int parkeergarageId) throws SQLException, ClassNotFoundException {
+
             Auto auto = autoDAO.getSpecificCar(autoid);
-            Parkeerplaats parkeerplaats = parkeerplaatsDAO.getSpecificParkingspot(1);
+            Parkeerplaats parkeerplaats = new Parkeerplaats();
+            parkeerplaats = parkeerplaats.vrijeParkeerplaats(parkeergarageId,datum,eindtijd,begintijd);
             Reservering reservering = new Reservering(parkeerplaats, begintijd, eindtijd, datum, auto);
             reserveringDAO.CreateReservering(reservering);
             return true;
-        }catch(Exception e){
-        System.out.println("Reservering is niet aangemaakt : CONTROLLER");
-        return false;
-    }
+
     }
 
     @GetMapping("/reserveringen/{autoId}")

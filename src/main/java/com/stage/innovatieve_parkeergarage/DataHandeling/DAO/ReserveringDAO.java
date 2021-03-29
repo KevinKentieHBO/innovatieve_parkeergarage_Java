@@ -8,4 +8,5 @@ import java.util.ArrayList;
 public interface ReserveringDAO {
     public Boolean CreateReservering(Reservering reservering) throws ClassNotFoundException, SQLException;
     public ArrayList getReserveringenGebruiker(int autoId);
+    public ArrayList getReserveringenGarage(int parkeergarage_Id, String datum);
 }
