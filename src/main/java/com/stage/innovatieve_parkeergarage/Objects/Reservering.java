@@ -2,9 +2,10 @@ package com.stage.innovatieve_parkeergarage.Objects;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 
-public class Reservering implements  Comparable<Reservering>{
+public class Reservering {
     private int reservering_Id;
     private Parkeerplaats reservering_Parkeerplaats;
     private String reservering_Begintijd;
@@ -58,13 +59,5 @@ public class Reservering implements  Comparable<Reservering>{
         return datum;
     }
 
-    @Override
-    public int compareTo(Reservering r) {
-        try {
-            return stringToDate().compareTo(r.stringToDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
+    Comparator<Reservering> comparator = Comparator.comparing(Reservering::getReservering_Datum).thenComparing(Reservering::getReservering_Begintijd);
 }

@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 
 @RestController
 public class ReserveringController {
@@ -47,7 +48,15 @@ public class ReserveringController {
     public String getReserveringenGebruiker(@PathVariable int autoId)throws SQLException, ClassNotFoundException{
         JsonArray reserverenJsonArray = new JsonArray();
         ArrayList<Reservering> reserveringArray = reserveringDAO.getReserveringenGebruiker(autoId);
-        Collections.sort(reserveringArray);
+        Collections.sort(reserveringArray, new Comparator<Reservering>() {
+            @Override
+            public int compare(Reservering o1, Reservering o2) {
+                int DatumCompare = o1.getReservering_Datum().compareTo(o2.getReservering_Datum());
+                int BegintijdCompare = o1.getReservering_Begintijd().compareTo(o2.getReservering_Begintijd());
+
+                return (DatumCompare == 0) ? BegintijdCompare : DatumCompare;
+            }
+        });
         Collections.reverse(reserveringArray);
 
         for(Reservering reservering : reserveringArray){
