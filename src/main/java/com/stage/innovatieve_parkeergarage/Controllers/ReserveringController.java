@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 @RestController
 public class ReserveringController {
@@ -46,6 +48,8 @@ public class ReserveringController {
     public String getReserveringenGebruiker(@PathVariable int autoId)throws SQLException, ClassNotFoundException{
         JsonArray reserverenJsonArray = new JsonArray();
         ArrayList<Reservering> reserveringArray = reserveringDAO.getReserveringenGebruiker(autoId);
+        Collections.sort(reserveringArray);
+        Collections.reverse(reserveringArray);
 
         for(Reservering reservering : reserveringArray){
             JsonObject reserveringJson = new JsonObject();
