@@ -23,13 +23,13 @@ public class ParkeergarageController {
         ArrayList<Parkeergarage> parkeergarageArray = parkeergarageDAO.getAllParkingFacilities();
         for(Parkeergarage garage : parkeergarageArray){
             JsonObject parkeergarageJson = new JsonObject();
-            parkeergarageJson.addProperty("Id", garage.getParkeergarage_Id());
-            parkeergarageJson.addProperty("Naam", garage.getParkeergarage_Naam());
-            parkeergarageJson.addProperty("Locatie", garage.getParkeergarage_Locatie());
-            parkeergarageJson.addProperty("Lagen", garage.getParkeergarage_Parkeerlagen());
-            parkeergarageJson.addProperty("Aantal_Plaatsen", garage.getParkeergarage_Aantal_Plaatsen());
-            parkeergarageJson.addProperty("Openingstijd", garage.getParkeergarage_Opening());
-            parkeergarageJson.addProperty("Sluitingstijd", garage.getParkeergarage_Sluiting());
+            parkeergarageJson.addProperty("parkeergarage_Id", garage.getParkeergarage_Id());
+            parkeergarageJson.addProperty("parkeergarage_Naam", garage.getParkeergarage_Naam());
+            parkeergarageJson.addProperty("parkeergarage_Locatie", garage.getParkeergarage_Locatie());
+            parkeergarageJson.addProperty("parkeergarage_Parkeerlagen", garage.getParkeergarage_Parkeerlagen());
+            parkeergarageJson.addProperty("parkeergarage_Aantal_Plaatsen", garage.getParkeergarage_Aantal_Plaatsen());
+            parkeergarageJson.addProperty("parkeergarage_Opening", garage.getParkeergarage_Opening());
+            parkeergarageJson.addProperty("parkeergarage_Sluiting", garage.getParkeergarage_Sluiting());
             garageJsonArray.add(parkeergarageJson);
         }
         return garageJsonArray.toString();

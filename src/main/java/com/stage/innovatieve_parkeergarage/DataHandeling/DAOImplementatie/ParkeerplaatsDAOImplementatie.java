@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class parkeerplaatsDAOImplementatie implements ParkeerplaatsDAO {
+public class ParkeerplaatsDAOImplementatie implements ParkeerplaatsDAO {
 
     @Override
     public Parkeerplaats getSpecificParkingspot(int parkeerplaats_Id) throws ClassNotFoundException, SQLException {
