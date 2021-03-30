@@ -51,7 +51,7 @@ public class ReserveringController {
         Collections.sort(reserveringArray, new Comparator<Reservering>() {
             @Override
             public int compare(Reservering o1, Reservering o2) {
-                int DatumCompare = o1.getReservering_Datum().compareTo(o2.getReservering_Datum());
+                int DatumCompare = o2.getReservering_Datum().compareTo(o1.getReservering_Datum());
                 int BegintijdCompare = o1.getReservering_Begintijd().compareTo(o2.getReservering_Begintijd());
 
                 return (DatumCompare == 0) ? BegintijdCompare : DatumCompare;
