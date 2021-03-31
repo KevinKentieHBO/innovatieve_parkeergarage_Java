@@ -79,4 +79,26 @@ public class ReserveringDAOImplementatie implements ReserveringDAO {
             return null;
         }
     }
+
+    @Override
+    public Reservering getGemaakteReservering(String datum, String eindtijd, String begintijd, int autoid, int parkeergarageId) {
+        try {
+            ParkeerplaatsDAO parkeerplaatsDAO = new ParkeerplaatsDAOImplementatie();
+            Reservering reservering = null;
+            Connection connection = new SQLite_Con().makeConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select * from Reservering where Reservering_Datum = '"+datum+"' and Reservering_Begintijd = '"+begintijd+"' and Reservering_Eindtijd = '"+eindtijd+"' and Reservering_Auto_Id = "+autoid);
+            while(rs.next()) {
+                Parkeerplaats parkeerplaats = parkeerplaatsDAO.getReserveringParkingspotGet(rs.getInt(1));
+                reservering = new Reservering(rs.getInt(1),parkeerplaats,rs.getString(3),rs.getString(4),rs.getString(5),null);
+            }
+            rs.close();
+            connection.close();
+            return reservering;
+        } catch (
+                Exception e) {
+            System.out.println("Reservering is niet opgehaald : SQL");
+            return null;
+        }
+    }
 }

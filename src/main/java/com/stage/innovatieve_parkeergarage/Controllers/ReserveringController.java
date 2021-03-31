@@ -38,13 +38,35 @@ public class ReserveringController {
                                   @PathVariable int autoid,
                                     @PathVariable int parkeergarageId) throws SQLException, ClassNotFoundException {
 
-            Auto auto = autoDAO.getSpecificCar(autoid);
-            Parkeerplaats parkeerplaats = new Parkeerplaats();
-            parkeerplaats = parkeerplaats.vrijeParkeerplaats(parkeergarageId,datum,eindtijd,begintijd);
-            Reservering reservering = new Reservering(parkeerplaats, begintijd, eindtijd, datum, auto);
-            reserveringDAO.CreateReservering(reservering);
-            return true;
+        Auto auto = autoDAO.getSpecificCar(autoid);
+        Parkeerplaats parkeerplaats = new Parkeerplaats();
+        parkeerplaats = parkeerplaats.vrijeParkeerplaats(parkeergarageId,datum,eindtijd,begintijd);
+        Reservering reservering = new Reservering(parkeerplaats, begintijd, eindtijd, datum, auto);
+        reserveringDAO.CreateReservering(reservering);
+        return true;
+    }
 
+    //Functie die via een get Rest Api een reservering kan vinden op datum, begintijd, eindtijd, autoid en parkeergarageid
+    @GetMapping("/reservering/get/{datum}/{begintijd}/{eindtijd}/{autoid}/{parkeergarageId}")
+    public String getGemaakteReservering(@PathVariable String datum,
+                                         @PathVariable String eindtijd,
+                                         @PathVariable String begintijd,
+                                         @PathVariable int autoid,
+                                         @PathVariable int parkeergarageId) throws SQLException, ClassNotFoundException{
+
+        JsonObject reserveringJson = new JsonObject();
+        Reservering reservering = reserveringDAO.getGemaakteReservering(datum,eindtijd,begintijd,autoid,parkeergarageId);
+        reserveringJson.addProperty("reservering_Id", reservering.getReservering_Id());
+        reserveringJson.addProperty("reservering_Parkeerplaats_Id", reservering.getReservering_Parkeerplaats().getParkeerplaats_Id());
+        reserveringJson.addProperty("reservering_Begintijd", reservering.getReservering_Begintijd());
+        reserveringJson.addProperty("reservering_Eindtijd", reservering.getReservering_Eindtijd());
+        reserveringJson.addProperty("reservering_Datum", reservering.getReservering_Datum());
+        reserveringJson.addProperty("reservering_Parkeerplaats_laag", reservering.getReservering_Parkeerplaats().getParkeerplaats_Laag());
+        reserveringJson.addProperty("reservering_Parkeerplaats_plek", reservering.getReservering_Parkeerplaats().getParkeerplaats_Locatie());
+        reserveringJson.addProperty("reservering_Parkeergarage", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Naam());
+        reserveringJson.addProperty("reservering_ParkeergarageLocatie", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Locatie());
+
+        return reserveringJson.toString();
     }
 
     //Functie die de reserveringen van een gebruiker weergeeft in JSON format via een Rest Api

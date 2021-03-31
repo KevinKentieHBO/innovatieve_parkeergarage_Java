@@ -10,4 +10,5 @@ public interface ReserveringDAO {
     public Boolean CreateReservering(Reservering reservering) throws ClassNotFoundException, SQLException;
     public ArrayList getReserveringenGebruiker(int autoId);
     public ArrayList getReserveringenGarage(int parkeergarage_Id, String datum);
+    public Reservering getGemaakteReservering(String datum, String eindtijd, String begintijd, int autoid, int parkeergarageId);
 }
