@@ -2,10 +2,9 @@ package com.stage.innovatieve_parkeergarage.DataHandeling;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
+//Klassen die de connectie met de database regelt
 public class SQLite_Con {
     public Connection makeConnection() throws ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");

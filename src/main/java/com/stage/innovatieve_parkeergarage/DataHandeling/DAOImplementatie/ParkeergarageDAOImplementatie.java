@@ -10,7 +10,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+//Deze klassen is een zorgt voor het aanroepen en uitvoeren van statements naar de database
 public class ParkeergarageDAOImplementatie implements ParkeergarageDAO {
+
+    //Deze functie haalt alle parkeergarages uit de database op
     @Override
     public ArrayList getAllParkingFacilities() throws ClassNotFoundException, SQLException {
         Connection connection = new SQLite_Con().makeConnection();

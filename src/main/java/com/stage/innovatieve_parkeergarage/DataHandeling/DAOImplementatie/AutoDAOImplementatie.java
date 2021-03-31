@@ -9,8 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+//Deze klassen is een zorgt voor het aanroepen en uitvoeren van statements naar de database
 public class AutoDAOImplementatie implements AutoDAO {
 
+    //Deze functie haalt een specifieke auto op uit de database met het Auto Id
     @Override
     public Auto getSpecificCar(int auto_Id) throws ClassNotFoundException, SQLException {
         Connection connection = new SQLite_Con().makeConnection();

@@ -10,9 +10,10 @@ import com.stage.innovatieve_parkeergarage.DataHandeling.DAO.BetaaltariefDAO;
 import com.stage.innovatieve_parkeergarage.DataHandeling.SQLite_Con;
 import com.stage.innovatieve_parkeergarage.Objects.Betaaltarief;
 
-
+//Deze klassen is een zorgt voor het aanroepen en uitvoeren van statements naar de database
 public class BetaaltariefDAOImplementatie implements BetaaltariefDAO {
 
+    //Deze functie die haalt alle betaaltarieven op uit de database
     @Override
     public ArrayList getAllBetaaltarief() throws ClassNotFoundException, SQLException {
         Connection connection = new SQLite_Con().makeConnection();

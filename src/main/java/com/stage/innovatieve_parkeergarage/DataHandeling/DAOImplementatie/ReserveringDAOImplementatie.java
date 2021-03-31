@@ -12,8 +12,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+//Deze klassen is een zorgt voor het aanroepen en uitvoeren van statements naar de database
 public class ReserveringDAOImplementatie implements ReserveringDAO {
 
+    //Functie die het aanmaken van een reserving regelt door een reservering mee te sturen
     @Override
     public Boolean CreateReservering(Reservering reservering) throws ClassNotFoundException, SQLException {
 
@@ -27,6 +29,7 @@ public class ReserveringDAOImplementatie implements ReserveringDAO {
 
     }
 
+    //Functie die een lijst met reserveringen ophaalt voor een specifieke gebruiker
     @Override
     public ArrayList getReserveringenGebruiker(int autoId) {
         try {
@@ -51,6 +54,7 @@ public class ReserveringDAOImplementatie implements ReserveringDAO {
         }
     }
 
+    //Functie die alle reserveringen van een specifieke parkeergarage ophaalt op een specifieke datum.
     @Override
     public ArrayList getReserveringenGarage(int parkeergarage_Id, String datum) {
         try {

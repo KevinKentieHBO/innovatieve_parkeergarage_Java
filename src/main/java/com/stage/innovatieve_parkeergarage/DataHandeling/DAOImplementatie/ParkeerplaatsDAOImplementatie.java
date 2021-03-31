@@ -8,8 +8,10 @@ import com.stage.innovatieve_parkeergarage.Objects.Parkeerplaats;
 import java.sql.*;
 import java.util.ArrayList;
 
+//Deze klassen is een zorgt voor het aanroepen en uitvoeren van statements naar de database
 public class ParkeerplaatsDAOImplementatie implements ParkeerplaatsDAO {
 
+    //Deze functie haalt een specifieke parkeerplaats op uit de database door een parkeerplaats id en een parkeergarage id mee te geven
     @Override
     public Parkeerplaats getSpecificParkingspot(int parkeerplaats_Id, int parkeergarage_Id) throws ClassNotFoundException, SQLException {
         Connection connection = new SQLite_Con().makeConnection();
@@ -21,6 +23,7 @@ public class ParkeerplaatsDAOImplementatie implements ParkeerplaatsDAO {
         return parkeerplaats;
     }
 
+    //Deze functie haalt een specifieke gereserveerde parkeerplaats op door een reservering Id mee te geven
     @Override
     public Parkeerplaats getReserveringParkingspotGet(int reservering_id) throws ClassNotFoundException, SQLException {
         Connection connection = new SQLite_Con().makeConnection();
@@ -32,6 +35,7 @@ public class ParkeerplaatsDAOImplementatie implements ParkeerplaatsDAO {
         return parkeerplaats;
     }
 
+    //Deze funtie haalt alle parkeerplaatsen van een parkeergarage op
     @Override
     public ArrayList<Parkeerplaats> getAllParkeerplaatsenParkeergarage(int parkeerplaats_Id) throws ClassNotFoundException, SQLException {
         ArrayList<Parkeerplaats> parkeerplaatsArrayList = new ArrayList<>();

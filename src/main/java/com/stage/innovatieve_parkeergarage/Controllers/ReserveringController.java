@@ -17,17 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
 @RestController
 public class ReserveringController {
 
+    //Deze controller wordt gebruikt om data op te halen of af te geven die betrekking heeft op de Reservering
+
+    //Initializeer een Domain Access Object
     AutoDAO autoDAO = new AutoDAOImplementatie();
     ParkeerplaatsDAO parkeerplaatsDAO = new ParkeerplaatsDAOImplementatie();
     ReserveringDAO reserveringDAO = new ReserveringDAOImplementatie();
 
+    //Functie die via een Post Rest Api een Reservering kan verwerken naar de database
     @GetMapping("/reservering/{datum}/{begintijd}/{eindtijd}/{autoid}/{parkeergarageId}")
     public Boolean CatchReservering(@PathVariable String datum,
                                   @PathVariable String eindtijd,
@@ -44,10 +47,13 @@ public class ReserveringController {
 
     }
 
+    //Functie die de reserveringen van een gebruiker weergeeft in JSON format via een Rest Api
     @GetMapping("/reserveringen/{autoId}")
     public String getReserveringenGebruiker(@PathVariable int autoId)throws SQLException, ClassNotFoundException{
         JsonArray reserverenJsonArray = new JsonArray();
         ArrayList<Reservering> reserveringArray = reserveringDAO.getReserveringenGebruiker(autoId);
+
+        //Sorteer de lijst aflopend op datum en oplopend op begintijd
         Collections.sort(reserveringArray, new Comparator<Reservering>() {
             @Override
             public int compare(Reservering o1, Reservering o2) {

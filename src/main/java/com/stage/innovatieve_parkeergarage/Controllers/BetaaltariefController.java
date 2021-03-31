@@ -14,8 +14,12 @@ import java.util.ArrayList;
 @RestController
 public class BetaaltariefController {
 
+    //Deze controller wordt gebruikt om data op te halen of af te geven die betrekking heeft op het betaaltarief
+
+    //Initializeer een Domain Access Object
     BetaaltariefDAO betaaltariefdao = new BetaaltariefDAOImplementatie();
 
+    //Get rest api om alle betaaltarieven op te halen in een JSON format
     @GetMapping("/betaaltarief")
     public String betaaltarief() throws SQLException, ClassNotFoundException {
         JsonArray tariefJsonArray = new JsonArray();
