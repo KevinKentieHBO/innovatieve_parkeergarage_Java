@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 public class ReserveringController {
@@ -53,14 +53,24 @@ public class ReserveringController {
         JsonArray reserverenJsonArray = new JsonArray();
         ArrayList<Reservering> reserveringArray = reserveringDAO.getReserveringenGebruiker(autoId);
 
-        //Sorteer de lijst aflopend op datum en oplopend op begintijd
+        //Sorteer de lijst aflopend op datum en aflopend op begintijd
         Collections.sort(reserveringArray, new Comparator<Reservering>() {
             @Override
             public int compare(Reservering o1, Reservering o2) {
-                int DatumCompare = o2.getReservering_Datum().compareTo(o1.getReservering_Datum());
+                Calendar calendarReservering1 = Calendar.getInstance();
+                Calendar calendarReservering2 = Calendar.getInstance();
+                try {
+                    Date datumReservering1 = new SimpleDateFormat("dd-MM-yyyy").parse(o1.getReservering_Datum());
+                    Date datumReservering2 = new SimpleDateFormat("dd-MM-yyyy").parse(o2.getReservering_Datum());
+                    calendarReservering1.setTime(datumReservering1);
+                    calendarReservering2.setTime(datumReservering2);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                int DagCompare = calendarReservering1.compareTo(calendarReservering2);
                 int BegintijdCompare = o1.getReservering_Begintijd().compareTo(o2.getReservering_Begintijd());
 
-                return (DatumCompare == 0) ? BegintijdCompare : DatumCompare;
+                return (DagCompare == 0) ? BegintijdCompare : DagCompare;
             }
         });
         Collections.reverse(reserveringArray);
