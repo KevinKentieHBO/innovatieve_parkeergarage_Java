@@ -52,4 +52,31 @@ class ReserveringTest {
         Date datum = reservering.stringToDate();//Act
         assertEquals("Fri Jan 01 00:00:00 CET 2021",datum.toString());//Assert
     }
+
+    @Test
+    void tijdVoorbijBegintijd(){
+        Boolean check1 = reservering.tijdVoorbijBegintijd("13:00","14:00","01-01-2021","01-01-2021");
+        Boolean check2 = reservering.tijdVoorbijBegintijd("13:00","13:00", "01-01-2021","01-01-2021");
+        Boolean check3 = reservering.tijdVoorbijBegintijd("13:00","12:00", " 01-01-2021","01-01-2021");
+
+        Boolean check4 = reservering.tijdVoorbijBegintijd("13:00","13:00","02-01-2021","01-01-2021");
+        Boolean check5 = reservering.tijdVoorbijBegintijd("13:00","13:00", "02-01-2021","03-01-2021");
+        Boolean check6 = reservering.tijdVoorbijBegintijd("13:00","13:00", " 02-01-2021","02-01-2021");
+
+        Boolean check7 = reservering.tijdVoorbijBegintijd("13:00","14:00","02-01-2021","01-01-2021");
+        Boolean check8 = reservering.tijdVoorbijBegintijd("13:00","13:00", "02-01-2021","03-01-2021");
+        Boolean check9 = reservering.tijdVoorbijBegintijd("13:00","12:00", " 02-01-2021","02-01-2021");
+
+        assertEquals(false,check1);
+        assertEquals(true,check2);
+        assertEquals(true,check3);
+
+        assertEquals(false,check4);
+        assertEquals(true,check5);
+        assertEquals(true,check6);
+
+        assertEquals(false,check7);
+        assertEquals(true,check8);
+        assertEquals(true,check9);
+    }
 }

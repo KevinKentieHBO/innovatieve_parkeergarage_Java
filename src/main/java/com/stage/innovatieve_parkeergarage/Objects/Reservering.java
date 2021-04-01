@@ -2,6 +2,7 @@ package com.stage.innovatieve_parkeergarage.Objects;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -68,6 +69,47 @@ public class Reservering {
     public Date stringToDate() throws ParseException {
         Date datum = new SimpleDateFormat("dd-MM-yyyy").parse(reservering_Datum);
         return datum;
+    }
+
+    //Deze functie checkt de checkTijd lager ligt dan de begintijd voor de verwijdering van de reservering
+    public Boolean tijdVoorbijBegintijd(String checkTijd, String begintijd, String reservering_Datum, String huidige_Datum) {
+        Boolean uitkomst = false;
+        try {
+            Date datumReservering1 = new SimpleDateFormat("dd-MM-yyyy").parse(reservering_Datum);
+
+            String string1 = begintijd;
+            Date time1 = new SimpleDateFormat("HH:mm").parse(string1);
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTime(time1);
+            calendar1.add(Calendar.DATE, 1);
+
+            String reserveringDatum = reservering_Datum;
+            Date resD = new SimpleDateFormat("dd-MM-yyyy").parse(reserveringDatum);
+            Calendar calendar2 = Calendar.getInstance();
+            calendar2.setTime(resD);
+            calendar2.add(Calendar.DATE, 1);
+
+            String teBekijkenTijd = checkTijd;
+            Date d = new SimpleDateFormat("HH:mm").parse(teBekijkenTijd);
+            Calendar calendar3 = Calendar.getInstance();
+            calendar3.setTime(d);
+            calendar3.add(Calendar.DATE, 1);
+
+            String huidigeDatum = huidige_Datum;
+            Date huiD = new SimpleDateFormat("dd-MM-yyyy").parse(huidigeDatum);
+            Calendar calendar4 = Calendar.getInstance();
+            calendar4.setTime(huiD);
+            calendar4.add(Calendar.DATE, 1);
+
+            Date x = calendar3.getTime();
+            if ((calendar2.getTime().before(calendar4.getTime()) || calendar2.getTime().equals(calendar4.getTime())) &&(x.after(calendar1.getTime()) || x.equals(calendar1.getTime()))) {
+                uitkomst = true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println(uitkomst);
+        return uitkomst;
     }
 
     //vergelijken van twee datums om een vrije parkeerplaats te zoeken

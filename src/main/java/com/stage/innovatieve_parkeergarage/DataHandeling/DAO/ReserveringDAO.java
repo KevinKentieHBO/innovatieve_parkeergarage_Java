@@ -11,4 +11,6 @@ public interface ReserveringDAO {
     public ArrayList getReserveringenGebruiker(int autoId);
     public ArrayList getReserveringenGarage(int parkeergarage_Id, String datum);
     public Reservering getGemaakteReservering(String datum, String eindtijd, String begintijd, int autoid, int parkeergarageId);
+    public Boolean verwijderReserveringById(int id) throws ClassNotFoundException, SQLException;
+    public Reservering getReserveringById(int id) throws ClassNotFoundException, SQLException;
 }

@@ -49,4 +49,21 @@ class ReserveringDAOImplementatieTest {
         when(mock.getReserveringenGarage(1,"01-01-2021")).thenReturn(reserveringArrayList);
         assertEquals(3,reserveringArrayList.size());
     }
+
+    @Test
+    void verwijderReserveringById() throws SQLException, ClassNotFoundException {
+        Reservering res = new Reservering(1,new Parkeerplaats(1, new Parkeergarage(100,"Theater","Nieuwegein", 14,550,"07:00","22:00"),1,1),"13:00","14:00","01-01-2021",new Auto(1,"123-AB-4"));
+        when(mock.verwijderReserveringById(res.getReservering_Id())).thenReturn(true);
+        Boolean resultaat = mock.verwijderReserveringById(res.getReservering_Id());
+        assertEquals(resultaat,true);
+    }
+
+    @Test
+    void getReserveringById() throws SQLException, ClassNotFoundException {
+        Reservering res = new Reservering(1,new Parkeerplaats(1, new Parkeergarage(100,"Theater","Nieuwegein", 14,550,"07:00","22:00"),1,1),"13:00","14:00","01-01-2021",new Auto(1,"123-AB-4"));
+        when(mock.getReserveringById(1)).thenReturn(res);
+        Reservering opgehaaldeReservering = mock.getReserveringById(1);
+        assertEquals(opgehaaldeReservering.getReservering_Id(),1);
+
+    }
 }
