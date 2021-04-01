@@ -28,7 +28,7 @@ class ReserveringControllerTest {
 
     @Test
     void getReserveringenGebruiker() throws Exception {
-        String uri = "/reserveringen/1";
+        String uri = "/reserveringen/2";
         MvcResult mvcResult = mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();

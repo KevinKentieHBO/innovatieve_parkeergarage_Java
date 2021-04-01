@@ -131,7 +131,7 @@ public class Parkeerplaats {
             calendar3.add(Calendar.DATE, 1);
 
             Date x = calendar3.getTime();
-            if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())) {
+            if (x.after(calendar1.getTime()) && x.before(calendar2.getTime()) || x.equals(calendar1.getTime()) || x.equals(calendar2.getTime())) {
                 System.out.println(true);
                 uitkomst = true;
             }
