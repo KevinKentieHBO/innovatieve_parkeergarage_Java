@@ -12,7 +12,7 @@ public class SQLite_Con {
         try
         {
             // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:/Users/kevinkentie/Documents/Programmeren/SQLite Databases/Innovatieve_Parkeergarage.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:src/main/resources/static/Innovatieve_Parkeergarage.db");
     }catch(SQLException e)
         {
             // if the error message is "out of memory",
