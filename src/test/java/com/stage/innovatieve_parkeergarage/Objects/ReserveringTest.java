@@ -10,6 +10,32 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReserveringTest {
 
     Reservering reservering = new Reservering(1,new Parkeerplaats(1,null,1,1),"13:00","15:00","01-01-2021",new Auto(1,"280-BB-1"));//Arrange
+    Reservering reserveringsetter = new Reservering(1,new Parkeerplaats(1,null,1,1),"13:00","15:00","01-01-2021",new Auto(1,"280-BB-1"));//Arrange
+
+    @Test
+    void setReservering_Parkeerplaats() {
+        Parkeerplaats parkeerplaats = new Parkeerplaats(1,new Parkeergarage(1,"Theater","Nieuwegein",14,550,"09:00","22:00"),1,1);//Arrange
+        reserveringsetter.setReservering_Parkeerplaats(parkeerplaats);
+        assertEquals(1,reserveringsetter.getReservering_Parkeerplaats().getParkeerplaats_Id());//Assert
+    }
+
+    @Test
+    void setReservering_Begintijd() {
+        reserveringsetter.setReservering_Begintijd("09:00");//Act
+        assertEquals("09:00",reserveringsetter.getReservering_Begintijd());//Assert
+    }
+
+    @Test
+    void setReservering_Eindtijd() {
+        reserveringsetter.setReservering_Eindtijd("10:00");//Act
+        assertEquals("10:00",reserveringsetter.getReservering_Eindtijd());//Assert
+    }
+
+    @Test
+    void setReservering_Datum() {
+        reserveringsetter.setReservering_Datum("01-01-2022");//Act
+        assertEquals("01-01-2022",reserveringsetter.getReservering_Datum());//Assert;
+    }
 
     @Test
     void getReservering_Id() {

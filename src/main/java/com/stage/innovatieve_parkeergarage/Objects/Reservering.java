@@ -35,6 +35,26 @@ public class Reservering {
         this.reservering_Auto = reservering_Auto;
     }
 
+    //veranderen van de data in het attribuut parkeerplaats
+    public void setReservering_Parkeerplaats(Parkeerplaats reservering_Parkeerplaats) {
+        this.reservering_Parkeerplaats = reservering_Parkeerplaats;
+    }
+
+    //veranderen van de data in het attribuut Begintijd
+    public void setReservering_Begintijd(String reservering_Begintijd) {
+        this.reservering_Begintijd = reservering_Begintijd;
+    }
+
+    //veranderen van de data in het attribuut Eindtijd
+    public void setReservering_Eindtijd(String reservering_Eindtijd) {
+        this.reservering_Eindtijd = reservering_Eindtijd;
+    }
+
+    //veranderen van de data in het attribuut Datum
+    public void setReservering_Datum(String reservering_Datum) {
+        this.reservering_Datum = reservering_Datum;
+    }
+
     //geeft reservering id terug
     public int getReservering_Id() {
         return reservering_Id;

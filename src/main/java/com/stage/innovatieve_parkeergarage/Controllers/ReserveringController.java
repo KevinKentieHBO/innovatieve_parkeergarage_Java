@@ -48,6 +48,34 @@ public class ReserveringController {
         return true;
     }
 
+    //Functie die via een put Rest Api een reservering kan wijzigen door de te wijzige data en het idee door te geven
+    @GetMapping("/reservering/update/{datum}/{begintijd}/{eindtijd}/{reserveringid}/{parkeergarageid}")
+    public String updateReservering(@PathVariable String datum,
+                                    @PathVariable String eindtijd,
+                                    @PathVariable String begintijd,
+                                    @PathVariable int reserveringid,
+                                    @PathVariable int parkeergarageid) throws SQLException, ClassNotFoundException {
+
+        JsonObject resultaatJson = new JsonObject();
+        Parkeerplaats parkeerplaats = new Parkeerplaats();
+        Reservering reservering = reserveringDAO.getReserveringById(reserveringid);
+        reservering.setReservering_Datum(datum);
+        System.out.println(reservering.getReservering_Datum());
+        reservering.setReservering_Eindtijd(eindtijd);
+        reservering.setReservering_Begintijd(begintijd);
+        reservering.setReservering_Parkeerplaats(parkeerplaats.vrijeParkeerplaats(parkeergarageid,reservering.getReservering_Datum(),reservering.getReservering_Eindtijd(),reservering.getReservering_Begintijd()));
+        if(reserveringDAO.updateReserveringById(reservering.getReservering_Id(),reservering.getReservering_Datum(),reservering.getReservering_Begintijd(),reservering.getReservering_Eindtijd(),reservering.getReservering_Parkeerplaats())){
+            System.out.println("true");
+            resultaatJson.addProperty("resultaat","true");
+            return resultaatJson.toString();
+        }else {
+            // Aanroepen van de SQL delete reservering
+            System.out.println("false");
+            resultaatJson.addProperty("resultaat", "false");
+            return resultaatJson.toString();
+        }
+    }
+
     //Functie die via een get Rest Api een reservering kan vinden op datum, begintijd, eindtijd, autoid en parkeergarageid
     @GetMapping("/reservering/get/{datum}/{begintijd}/{eindtijd}/{autoid}/{parkeergarageId}")
     public String getGemaakteReservering(@PathVariable String datum,
@@ -67,6 +95,9 @@ public class ReserveringController {
         reserveringJson.addProperty("reservering_Parkeerplaats_plek", reservering.getReservering_Parkeerplaats().getParkeerplaats_Locatie());
         reserveringJson.addProperty("reservering_Parkeergarage", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Naam());
         reserveringJson.addProperty("reservering_ParkeergarageLocatie", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Locatie());
+        reserveringJson.addProperty("reservering_Parkeergarage_Opening", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Opening());
+        reserveringJson.addProperty("reservering_Parkeergarage_Sluiting", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Sluiting());
+        reserveringJson.addProperty("reservering_parkeergarage_Id", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Id());
 
         return reserveringJson.toString();
     }
@@ -138,6 +169,9 @@ public class ReserveringController {
             reserveringJson.addProperty("reservering_Parkeerplaats_plek", reservering.getReservering_Parkeerplaats().getParkeerplaats_Locatie());
             reserveringJson.addProperty("reservering_Parkeergarage", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Naam());
             reserveringJson.addProperty("reservering_ParkeergarageLocatie", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Locatie());
+            reserveringJson.addProperty("reservering_Parkeergarage_Opening", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Opening());
+            reserveringJson.addProperty("reservering_Parkeergarage_Sluiting", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Sluiting());
+            reserveringJson.addProperty("reservering_parkeergarage_Id", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Id());
             reserverenJsonArray.add(reserveringJson);
         }
         return reserverenJsonArray.toString();

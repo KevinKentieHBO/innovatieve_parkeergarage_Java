@@ -1,5 +1,6 @@
 package com.stage.innovatieve_parkeergarage.DataHandeling.DAO;
 
+import com.stage.innovatieve_parkeergarage.Objects.Parkeerplaats;
 import com.stage.innovatieve_parkeergarage.Objects.Reservering;
 
 import java.sql.SQLException;
@@ -13,4 +14,5 @@ public interface ReserveringDAO {
     public Reservering getGemaakteReservering(String datum, String eindtijd, String begintijd, int autoid, int parkeergarageId);
     public Boolean verwijderReserveringById(int id) throws ClassNotFoundException, SQLException;
     public Reservering getReserveringById(int id) throws ClassNotFoundException, SQLException;
+    public Boolean updateReserveringById(int id, String datum, String begintijd, String eindtijd, Parkeerplaats parkeerplaats) throws ClassNotFoundException, SQLException;
 }

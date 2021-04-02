@@ -135,4 +135,19 @@ public class ReserveringDAOImplementatie implements ReserveringDAO {
             return null;
         }
     }
+
+    @Override
+    public Boolean updateReserveringById(int id, String datum, String begintijd, String eindtijd, Parkeerplaats parkeerplaats) throws ClassNotFoundException, SQLException {
+        try {
+            Connection connection = new SQLite_Con().makeConnection();
+            Statement statement = connection.createStatement();
+            System.out.println("UPDATE Reservering SET Reservering_Begintijd = '"+begintijd+"' , Reservering_Eindtijd = '"+eindtijd+"', Reservering_Datum = '"+datum+"' , Reservering_Parkeerplaats_Id = "+parkeerplaats.getParkeerplaats_Id()+" Where Reservering_Id = "+id);
+            statement.executeUpdate("UPDATE Reservering SET Reservering_Begintijd = '"+begintijd+"' , Reservering_Eindtijd = '"+eindtijd+"', Reservering_Datum = '"+datum+"' , Reservering_Parkeerplaats_Id = "+parkeerplaats.getParkeerplaats_Id()+" Where Reservering_Id = "+id);
+            connection.close();
+            return true;
+        }catch(Exception e){
+            System.out.println(e.toString());
+            return false;
+        }
+    }
 }
