@@ -30,4 +30,17 @@ class AbonnementDAOImplementatieTest {
         assertEquals(2,getList.size());
     }
 
+    @Test
+    void getAbonnementenAutoId() throws SQLException, ClassNotFoundException {
+        AbonnementDAO mock = Mockito.mock(AbonnementDAOImplementatie.class);
+
+        ArrayList<Abonnement> list = new ArrayList();
+        list.add(new Abonnement(1, new Abonnement_Type(1,"Jaar","Dit is een test"),7,1000.99));
+        list.add(new Abonnement(2, new Abonnement_Type(1,"Jaar","Dit is een test"),7,1000.99));
+
+        when(mock.getAbonnementenAutoId(1)).thenReturn(list);
+        ArrayList<Abonnement> getList = mock.getAbonnementenParkeergarage(1);
+        assertEquals(2,getList.size());
+    }
+
 }

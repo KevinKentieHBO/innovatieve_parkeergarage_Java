@@ -8,6 +8,7 @@ class AbonnementTest {
 
     Abonnement abonnement = new Abonnement(1, new Abonnement_Type(1,"Jaar","Dit is een test"),7,1000.99);
 
+
     @Test
     void getIdTest(){
         int id = abonnement.getId(); //Act
@@ -59,5 +60,41 @@ class AbonnementTest {
     void setJaartariefTest(){
         abonnement.setJaartarief(999.99);
         assertEquals(999.99, abonnement.getJaartarief());
+    }
+
+    @Test
+    void setBegindatum(){
+        abonnement.setBegindatum("01-01-2021");
+        String begindatum = abonnement.getBegindatum();
+        assertEquals("01-01-2021",begindatum);
+    }
+
+    @Test
+    void getBegindatum(){
+        abonnement.setBegindatum("01-01-2021");
+        String begindatum = abonnement.getBegindatum();
+        assertEquals("01-01-2021",begindatum);
+    }
+
+    @Test
+    void setEinddatum(){
+        abonnement.setEinddatum("01-02-2021");
+        String einddatum = abonnement.getEinddatum();
+        assertEquals("01-02-2021",einddatum);
+    }
+
+    @Test
+    void getEinddatum(){
+        abonnement.setEinddatum("01-02-2021");
+        String einddatum = abonnement.getEinddatum();
+        assertEquals("01-02-2021",einddatum);
+    }
+
+    @Test
+    void isAbonnementActief(){
+        abonnement.setBegindatum("01-01-2021");
+        abonnement.setEinddatum("01-02-2021");
+        String res = abonnement.isAbonnementActief();
+        assertEquals("Verlopen",res);
     }
 }

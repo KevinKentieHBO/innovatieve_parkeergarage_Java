@@ -22,8 +22,17 @@ class AbonnementControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void betaaltarief() throws Exception {
+    void abonnementParkeergarageTest() throws Exception {
         String uri = "/abonnement/1";
+        MvcResult mvcResult = mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200,status);
+    }
+
+    @Test
+    void abonnementGebruikerTest() throws Exception {
+        String uri = "/abonnement/get/2";
         MvcResult mvcResult = mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
