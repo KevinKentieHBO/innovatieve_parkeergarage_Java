@@ -74,21 +74,30 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/userdata/{encodedgebruikersid}")
-    public String getUserData(@PathVariable String encodedgebruikersid){
+    @GetMapping("/userdata/{encodedgebruikersid}/{encodedtoken}")
+    public String getUserData(@PathVariable String encodedgebruikersid,
+                              @PathVariable String encodedtoken) throws SQLException, ClassNotFoundException {
 
         //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
         String urlDecodedGb = URLDecoder.decode(encodedgebruikersid.replace( "+", "%2B" ));
         int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
 
-        Account account = accountDAO.getUserData(gebruikersid);
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedtoken.replace( "+", "%2B" ));
+        String token = AESCryption.decrypt(tokenDecoded);
 
-        //Leeg JSON object
-        JsonObject resultaatJson = new JsonObject();
-        resultaatJson.addProperty("Account_Email",account.getAccount_Email());
-        resultaatJson.addProperty("Account_Saldo",account.getAccount_Saldo());
-        resultaatJson.addProperty("Bestuurder_Geboortedatum",account.getAccount_Bestuurder().getBestuurder_Geboortedatum());
+        if(accountDAO.checkAuthentication(gebruikersid,token)) {
+            Account account = accountDAO.getUserData(gebruikersid);
 
-        return AESCryption.encrypt(resultaatJson.toString());
+            //Leeg JSON object
+            JsonObject resultaatJson = new JsonObject();
+            resultaatJson.addProperty("Account_Email", account.getAccount_Email());
+            resultaatJson.addProperty("Account_Saldo", account.getAccount_Saldo());
+            resultaatJson.addProperty("Bestuurder_Geboortedatum", account.getAccount_Bestuurder().getBestuurder_Geboortedatum());
+
+            return AESCryption.encrypt(resultaatJson.toString());
+        }else{
+            return null;
+        }
     }
 }
