@@ -52,7 +52,9 @@ public class AccountController {
             resultaatJson.addProperty("Resultaat","false");
             resultaatJson.addProperty("Account_Id", 0);
             resultaatJson.addProperty("Account_Token", "false");
-            resultaatJson.addProperty("Account_Actief_Kenteken", "false");
+            resultaatJson.addProperty("Account_Actief_Kenteken_Id", "false");
+            resultaatJson.addProperty("Bestuurder_Naam", "false");
+
             return AESCryption.encrypt(resultaatJson.toString());
         }
     }
