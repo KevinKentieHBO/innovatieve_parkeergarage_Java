@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.stage.innovatieve_parkeergarage.DataHandeling.DAO.BetaaltariefDAO;
 import com.stage.innovatieve_parkeergarage.DataHandeling.DAOImplementatie.BetaaltariefDAOImplementatie;
+import com.stage.innovatieve_parkeergarage.Logica.AESCryption;
 import com.stage.innovatieve_parkeergarage.Objects.Betaaltarief;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,6 @@ public class BetaaltariefController {
             betaaltariefJson.addProperty("waarde", tarief.getBetaaltarief_Waarde());
             tariefJsonArray.add(betaaltariefJson);
         }
-        return tariefJsonArray.toString();
+        return AESCryption.encrypt(tariefJsonArray.toString());
     }
 }

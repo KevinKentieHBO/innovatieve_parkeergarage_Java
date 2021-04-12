@@ -8,6 +8,7 @@ import com.stage.innovatieve_parkeergarage.DataHandeling.DAO.ReserveringDAO;
 import com.stage.innovatieve_parkeergarage.DataHandeling.DAOImplementatie.AutoDAOImplementatie;
 import com.stage.innovatieve_parkeergarage.DataHandeling.DAOImplementatie.ReserveringDAOImplementatie;
 import com.stage.innovatieve_parkeergarage.DataHandeling.DAOImplementatie.ParkeerplaatsDAOImplementatie;
+import com.stage.innovatieve_parkeergarage.Logica.AESCryption;
 import com.stage.innovatieve_parkeergarage.Objects.Auto;
 import com.stage.innovatieve_parkeergarage.Objects.Parkeerplaats;
 import com.stage.innovatieve_parkeergarage.Objects.Reservering;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,12 +35,28 @@ public class ReserveringController {
     ReserveringDAO reserveringDAO = new ReserveringDAOImplementatie();
 
     //Functie die via een Post Rest Api een Reservering kan verwerken naar de database
-    @GetMapping("/reservering/{datum}/{begintijd}/{eindtijd}/{autoid}/{parkeergarageId}")
-    public Boolean CatchReservering(@PathVariable String datum,
-                                  @PathVariable String eindtijd,
-                                  @PathVariable String begintijd,
-                                  @PathVariable int autoid,
-                                    @PathVariable int parkeergarageId) throws SQLException, ClassNotFoundException {
+    @GetMapping("/reservering/{encodeddatum}/{encodedbegintijd}/{encodedeindtijd}/{encodedautoid}/{encodedparkeergarageId}")
+    public Boolean CatchReservering(@PathVariable String encodeddatum,
+                                  @PathVariable String encodedeindtijd,
+                                  @PathVariable String encodedbegintijd,
+                                  @PathVariable String encodedautoid,
+                                    @PathVariable String encodedparkeergarageId) throws SQLException, ClassNotFoundException {
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedPid = URLDecoder.decode(encodedparkeergarageId.replace( "+", "%2B" ));
+        int parkeergarageId = Integer.parseInt(AESCryption.decrypt(urlDecodedPid));
+
+        String urlDecodedDat = URLDecoder.decode(encodeddatum.replace( "+", "%2B" ));
+        String datum = AESCryption.decrypt(urlDecodedDat);
+
+        String urlDecodedBtijd = URLDecoder.decode(encodedbegintijd.replace( "+", "%2B" ));
+        String begintijd = AESCryption.decrypt(urlDecodedBtijd);
+
+        String urlDecodedEtijd = URLDecoder.decode(encodedeindtijd.replace( "+", "%2B" ));
+        String eindtijd = AESCryption.decrypt(urlDecodedEtijd);
+
+        String urlDecodedAid = URLDecoder.decode(encodedautoid.replace( "+", "%2B" ));
+        int autoid = Integer.parseInt(AESCryption.decrypt(urlDecodedAid));
 
         Auto auto = autoDAO.getSpecificCar(autoid);
         Parkeerplaats parkeerplaats = new Parkeerplaats();
@@ -49,12 +67,28 @@ public class ReserveringController {
     }
 
     //Functie die via een put Rest Api een reservering kan wijzigen door de te wijzige data en het idee door te geven
-    @GetMapping("/reservering/update/{datum}/{begintijd}/{eindtijd}/{reserveringid}/{parkeergarageid}")
-    public String updateReservering(@PathVariable String datum,
-                                    @PathVariable String eindtijd,
-                                    @PathVariable String begintijd,
-                                    @PathVariable int reserveringid,
-                                    @PathVariable int parkeergarageid) throws SQLException, ClassNotFoundException {
+    @GetMapping("/reservering/update/{encodeddatum}/{encodedbegintijd}/{encodedeindtijd}/{encodedreserveringid}/{encodedparkeergarageid}")
+    public String updateReservering(@PathVariable String encodeddatum,
+                                    @PathVariable String encodedeindtijd,
+                                    @PathVariable String encodedbegintijd,
+                                    @PathVariable String encodedreserveringid,
+                                    @PathVariable String encodedparkeergarageid) throws SQLException, ClassNotFoundException {
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedPid = URLDecoder.decode(encodedparkeergarageid.replace( "+", "%2B" ));
+        int parkeergarageid = Integer.parseInt(AESCryption.decrypt(urlDecodedPid));
+
+        String urlDecodedDat = URLDecoder.decode(encodeddatum.replace( "+", "%2B" ));
+        String datum = AESCryption.decrypt(urlDecodedDat);
+
+        String urlDecodedBtijd = URLDecoder.decode(encodedbegintijd.replace( "+", "%2B" ));
+        String begintijd = AESCryption.decrypt(urlDecodedBtijd);
+
+        String urlDecodedEtijd = URLDecoder.decode(encodedeindtijd.replace( "+", "%2B" ));
+        String eindtijd = AESCryption.decrypt(urlDecodedEtijd);
+
+        String urlDecodedresId = URLDecoder.decode(encodedreserveringid.replace( "+", "%2B" ));
+        int reserveringid = Integer.parseInt(AESCryption.decrypt(urlDecodedresId));
 
         JsonObject resultaatJson = new JsonObject();
         Parkeerplaats parkeerplaats = new Parkeerplaats();
@@ -67,22 +101,38 @@ public class ReserveringController {
         if(reserveringDAO.updateReserveringById(reservering.getReservering_Id(),reservering.getReservering_Datum(),reservering.getReservering_Begintijd(),reservering.getReservering_Eindtijd(),reservering.getReservering_Parkeerplaats())){
             System.out.println("true");
             resultaatJson.addProperty("resultaat","true");
-            return resultaatJson.toString();
+            return AESCryption.encrypt(resultaatJson.toString());
         }else {
             // Aanroepen van de SQL delete reservering
             System.out.println("false");
             resultaatJson.addProperty("resultaat", "false");
-            return resultaatJson.toString();
+            return AESCryption.encrypt(resultaatJson.toString());
         }
     }
 
     //Functie die via een get Rest Api een reservering kan vinden op datum, begintijd, eindtijd, autoid en parkeergarageid
-    @GetMapping("/reservering/get/{datum}/{begintijd}/{eindtijd}/{autoid}/{parkeergarageId}")
-    public String getGemaakteReservering(@PathVariable String datum,
-                                         @PathVariable String eindtijd,
-                                         @PathVariable String begintijd,
-                                         @PathVariable int autoid,
-                                         @PathVariable int parkeergarageId) throws SQLException, ClassNotFoundException{
+    @GetMapping("/reservering/get/{encodeddatum}/{encodedbegintijd}/{encodedeindtijd}/{encodedautoid}/{encodedparkeergarageId}")
+    public String getGemaakteReservering(@PathVariable String encodeddatum,
+                                         @PathVariable String encodedeindtijd,
+                                         @PathVariable String encodedbegintijd,
+                                         @PathVariable String encodedautoid,
+                                         @PathVariable String encodedparkeergarageId) throws SQLException, ClassNotFoundException{
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedAid = URLDecoder.decode(encodedautoid.replace( "+", "%2B" ));
+        int autoid = Integer.parseInt(AESCryption.decrypt(urlDecodedAid));
+
+        String urlDecodedDat = URLDecoder.decode(encodeddatum.replace( "+", "%2B" ));
+        String datum = AESCryption.decrypt(urlDecodedDat);
+
+        String urlDecodedBtijd = URLDecoder.decode(encodedbegintijd.replace( "+", "%2B" ));
+        String begintijd = AESCryption.decrypt(urlDecodedBtijd);
+
+        String urlDecodedEtijd = URLDecoder.decode(encodedeindtijd.replace( "+", "%2B" ));
+        String eindtijd = AESCryption.decrypt(urlDecodedEtijd);
+
+        String urlDecodedPid = URLDecoder.decode(encodedparkeergarageId.replace( "+", "%2B" ));
+        int parkeergarageId = Integer.parseInt(AESCryption.decrypt(urlDecodedPid));
 
         JsonObject reserveringJson = new JsonObject();
         Reservering reservering = reserveringDAO.getGemaakteReservering(datum,eindtijd,begintijd,autoid,parkeergarageId);
@@ -99,13 +149,16 @@ public class ReserveringController {
         reserveringJson.addProperty("reservering_Parkeergarage_Sluiting", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Sluiting());
         reserveringJson.addProperty("reservering_parkeergarage_Id", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Id());
 
-        return reserveringJson.toString();
+        return AESCryption.encrypt(reserveringJson.toString());
     }
 
     //Functie die een unieke reservering verwijderd.
-    @GetMapping("/reservering/verwijder/{reserveringid}")
-    public String verwijderReservering(@PathVariable int reserveringid) throws SQLException, ClassNotFoundException {
+    @GetMapping("/reservering/verwijder/{encodedreserveringid}")
+    public String verwijderReservering(@PathVariable String encodedreserveringid) throws SQLException, ClassNotFoundException {
         JsonObject resultaatJson = new JsonObject();
+
+        String urlDecodedresId = URLDecoder.decode(encodedreserveringid.replace( "+", "%2B" ));
+        int reserveringid = Integer.parseInt(AESCryption.decrypt(urlDecodedresId));
 
         //bepalen van de huidige tijd
         DateTimeFormatter dtf_Tijd = DateTimeFormatter.ofPattern("HH:mm");
@@ -120,20 +173,24 @@ public class ReserveringController {
         if(reservering.tijdVoorbijBegintijd(dtf_Tijd.format(now),reservering.getReservering_Begintijd(),reservering.getReservering_Datum(), dtf_Datum.format(now))){
             System.out.println("false");
             resultaatJson.addProperty("resultaat","false");
-            return resultaatJson.toString();
+            return AESCryption.encrypt(resultaatJson.toString());
         }else{
             // Aanroepen van de SQL delete reservering
             System.out.println("true");
             reserveringDAO.verwijderReserveringById(reservering.getReservering_Id());
             resultaatJson.addProperty("resultaat","true");
-            return resultaatJson.toString();
+            return AESCryption.encrypt(resultaatJson.toString());
         }
     }
 
     //Functie die de reserveringen van een gebruiker weergeeft in JSON format via een Rest Api
-    @GetMapping("/reserveringen/{autoId}")
-    public String getReserveringenGebruiker(@PathVariable int autoId)throws SQLException, ClassNotFoundException{
+    @GetMapping("/reserveringen/{encodedautoId}")
+    public String getReserveringenGebruiker(@PathVariable String encodedautoId)throws SQLException, ClassNotFoundException{
         JsonArray reserverenJsonArray = new JsonArray();
+
+        String urlDecodedAid = URLDecoder.decode(encodedautoId.replace( "+", "%2B" ));
+        int autoId = Integer.parseInt(AESCryption.decrypt(urlDecodedAid));
+
         ArrayList<Reservering> reserveringArray = reserveringDAO.getReserveringenGebruiker(autoId);
 
         //Sorteer de lijst aflopend op datum en aflopend op begintijd
@@ -174,6 +231,6 @@ public class ReserveringController {
             reserveringJson.addProperty("reservering_parkeergarage_Id", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Id());
             reserverenJsonArray.add(reserveringJson);
         }
-        return reserverenJsonArray.toString();
+        return AESCryption.encrypt(reserverenJsonArray.toString());
     }
 }

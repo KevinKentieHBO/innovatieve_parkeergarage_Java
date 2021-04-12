@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.stage.innovatieve_parkeergarage.DataHandeling.DAO.ParkeergarageDAO;
 import com.stage.innovatieve_parkeergarage.DataHandeling.DAOImplementatie.ParkeergarageDAOImplementatie;
+import com.stage.innovatieve_parkeergarage.Logica.AESCryption;
 import com.stage.innovatieve_parkeergarage.Objects.Parkeergarage;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,6 @@ public class ParkeergarageController {
             parkeergarageJson.addProperty("parkeergarage_Sluiting", garage.getParkeergarage_Sluiting());
             garageJsonArray.add(parkeergarageJson);
         }
-        return garageJsonArray.toString();
+        return AESCryption.encrypt(garageJsonArray.toString());
     }
 }
