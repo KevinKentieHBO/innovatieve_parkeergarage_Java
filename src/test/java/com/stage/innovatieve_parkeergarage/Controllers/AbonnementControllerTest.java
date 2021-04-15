@@ -23,7 +23,7 @@ class AbonnementControllerTest {
 
     @Test
     void abonnementParkeergarageTest() throws Exception {
-        String uri = "/abonnement/1";
+        String uri = "/abonnement/90YovTJe5pOrNLXtTgx28w==/N9MXWfxo8Re%2FuD8nj13qHA==/aJ4QRCjxKZxYMxIdJLhD8bYjfMvfk%2F64FGHx8K3O4tHMaZq9uCs0i%2FMi8QSiQ7mX";
         MvcResult mvcResult = mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -32,7 +32,7 @@ class AbonnementControllerTest {
 
     @Test
     void abonnementGebruikerTest() throws Exception {
-        String uri = "/abonnement/get/2";
+        String uri = "/abonnement/get/N9MXWfxo8Re%2FuD8nj13qHA==/N9MXWfxo8Re%2FuD8nj13qHA==/aJ4QRCjxKZxYMxIdJLhD8bYjfMvfk%2F64FGHx8K3O4tHMaZq9uCs0i%2FMi8QSiQ7mX";
         MvcResult mvcResult = mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
