@@ -28,4 +28,19 @@ public class BetaaltariefDAOImplementatie implements BetaaltariefDAO {
         connection.close();
         return tarieven;
     }
+
+    @Override
+    public ArrayList getAllBetaaltariefParkeergarage(int parkeergarage_Id) throws ClassNotFoundException, SQLException {
+        Connection connection = new SQLite_Con().makeConnection();
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("select * from Betaaltarief, Parkeergarage where Betaaltarief_Parkeergarage_Id = Parkeergarage_Id and Parkeergarage_id = "+parkeergarage_Id);
+        ArrayList tarieven = new ArrayList<Betaaltarief>();
+        while(rs.next()) {
+            Betaaltarief tarief = new Betaaltarief(rs.getInt(1), rs.getString(2), rs.getDouble(3),null);
+            tarieven.add(tarief);
+        }
+        rs.close();
+        connection.close();
+        return tarieven;
+    }
 }

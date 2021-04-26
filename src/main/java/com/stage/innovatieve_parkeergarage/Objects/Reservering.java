@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Reservering {
 
@@ -15,6 +16,8 @@ public class Reservering {
     private String reservering_Eindtijd;
     private String reservering_Datum;
     private Auto reservering_Auto;
+    private String inrijtijd;
+    private String uitrijtijd;
 
     //Constructor om een Reservering Object aan te maken die een Id meeneemt
     public Reservering(int reservering_Id, Parkeerplaats reservering_Parkeerplaats, String reservering_Begintijd, String reservering_Eindtijd, String reservering_Datum, Auto reservering_Auto) {
@@ -128,8 +131,62 @@ public class Reservering {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println(uitkomst);
         return uitkomst;
+    }
+
+    //Deze functie checkt of de huidige tijd tussen de begintijd van de reservering of een uur eerder ligt.
+    public Boolean checkBegintijdInrijden(String checkTijd, String eindtijd) {
+        Boolean uitkomst = false;
+        try {
+            String string1 = eindtijd;
+            Date time1 = new SimpleDateFormat("HH:mm").parse(string1);
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTime(time1);
+            calendar1.add(Calendar.MINUTE,-15);
+            calendar1.add(Calendar.DATE, 1);
+
+            String string2 = checkTijd;
+            Date time2 = new SimpleDateFormat("HH:mm").parse(string2);
+            Calendar calendar2 = Calendar.getInstance();
+            calendar2.setTime(time2);
+            calendar2.add(Calendar.MINUTE,-30);
+            calendar2.add(Calendar.DATE, 1);
+
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+            Date d = new SimpleDateFormat("HH:mm").parse(formatter.format(date));
+            Calendar calendar3 = Calendar.getInstance();
+            calendar3.setTime(d);
+            calendar3.add(Calendar.DATE, 1);
+
+            System.out.println(calendar2.getTime());
+            System.out.println(calendar3.getTime());
+            System.out.println(calendar1.getTime());
+
+            Date x = calendar3.getTime();
+            if (x.after(calendar2.getTime()) && x.before(calendar1.getTime())) {
+                uitkomst = true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return uitkomst;
+    }
+
+    public String getInrijtijd() {
+        return inrijtijd;
+    }
+
+    public void setInrijtijd(String inrijtijd) {
+        this.inrijtijd = inrijtijd;
+    }
+
+    public String getUitrijtijd() {
+        return uitrijtijd;
+    }
+
+    public void setUitrijtijd(String uitrijtijd) {
+        this.uitrijtijd = uitrijtijd;
     }
 
     //vergelijken van twee datums om een vrije parkeerplaats te zoeken

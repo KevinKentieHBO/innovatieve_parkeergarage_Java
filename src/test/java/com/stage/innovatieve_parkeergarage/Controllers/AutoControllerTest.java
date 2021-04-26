@@ -38,5 +38,4 @@ class AutoControllerTest {
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200,status);
     }
-
 }

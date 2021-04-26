@@ -15,4 +15,9 @@ public interface ReserveringDAO {
     public Boolean verwijderReserveringById(int id) throws ClassNotFoundException, SQLException;
     public Reservering getReserveringById(int id) throws ClassNotFoundException, SQLException;
     public Boolean updateReserveringById(int id, String datum, String begintijd, String eindtijd, Parkeerplaats parkeerplaats) throws ClassNotFoundException, SQLException;
+    public Reservering getReserveringPython(int autoId, String datum, int parkeergarageId) throws ClassNotFoundException, SQLException;
+    public void updateInrijtijd(int resId, String tijd) throws ClassNotFoundException, SQLException;
+    public void updateUitrijtijd(int resId, String tijd) throws ClassNotFoundException, SQLException;
+    public Reservering getTijden(int resId) throws ClassNotFoundException, SQLException;
+    public Reservering getInrijtijd(int resId) throws ClassNotFoundException, SQLException;
 }

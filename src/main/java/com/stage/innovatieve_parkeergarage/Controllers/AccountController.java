@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URLDecoder;
 import java.sql.SQLException;
+import java.util.List;
 
 @RestController
 public class AccountController {
@@ -59,6 +60,51 @@ public class AccountController {
         }
     }
 
+    @GetMapping("saldocheck/{encodedparkeergarageid}/{encodedaccountid}/{encodedgebruikersid}/{encodedtoken}")
+    public String checkSaldo(@PathVariable String encodedparkeergarageid,
+                             @PathVariable String encodedgebruikersid,
+                             @PathVariable String encodedtoken,
+                             @PathVariable String encodedaccountid) throws SQLException, ClassNotFoundException {
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedtoken.replace( "+", "%2B" ));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGb = URLDecoder.decode(encodedgebruikersid.replace( "+", "%2B" ));
+        int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedPid = URLDecoder.decode(encodedparkeergarageid.replace( "+", "%2B" ));
+        int parkeergarageid = Integer.parseInt(AESCryption.decrypt(urlDecodedPid));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedAid = URLDecoder.decode(encodedaccountid.replace( "+", "%2B" ));
+        int accountid = Integer.parseInt(AESCryption.decrypt(urlDecodedAid));
+
+        Boolean result = false;
+        //Leeg JSON object
+        JsonObject resultaatJson = new JsonObject();
+
+        if(accountDAO.checkAuthentication(gebruikersid,token)){
+            List list = accountDAO.checkSaldo(parkeergarageid,accountid);
+            Boolean res = (Boolean) list.get(0);
+            if (res) {
+                resultaatJson.addProperty("resultaat", "true");
+                resultaatJson.addProperty("dagtarief", Double.parseDouble(list.get(1).toString()));
+                return AESCryption.encrypt(resultaatJson.toString());
+            }else{
+                resultaatJson.addProperty("resultaat", "false");
+                resultaatJson.addProperty("dagtarief", Double.parseDouble(list.get(1).toString()));
+                return AESCryption.encrypt(resultaatJson.toString());
+            }
+        }else{
+            resultaatJson.addProperty("resultaat", "false");
+            resultaatJson.addProperty("dagtarief", 0.00);
+            return AESCryption.encrypt(resultaatJson.toString());
+        }
+    }
+
     @GetMapping("/accountcheck/{gebruikersid}/{token}")
     public String checkAuth(@PathVariable int gebruikersid,
                         @PathVariable String token) throws SQLException, ClassNotFoundException {
@@ -101,5 +147,104 @@ public class AccountController {
         }else{
             return null;
         }
+    }
+
+    @GetMapping("/accountauto/{encodedautoid}/{encodedgebruikersid}/{encodedtoken}")
+    public String getUser(@PathVariable String encodedgebruikersid,
+                          @PathVariable String encodedtoken,
+                          @PathVariable String encodedautoid) throws SQLException, ClassNotFoundException {
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGb = URLDecoder.decode(encodedgebruikersid.replace( "+", "%2B" ));
+        int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedAId = URLDecoder.decode(encodedautoid.replace( "+", "%2B" ));
+        int autoId = Integer.parseInt(AESCryption.decrypt(urlDecodedAId));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedtoken.replace( "+", "%2B" ));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        if(accountDAO.checkAuthentication(gebruikersid,token)) {
+            Account account = accountDAO.getUserDataPython(autoId);
+
+            //Leeg JSON object
+            JsonObject resultaatJson = new JsonObject();
+            resultaatJson.addProperty("Account_Id", account.getAccount_Id());
+            resultaatJson.addProperty("Account_Saldo", account.getAccount_Saldo());
+
+            return AESCryption.encrypt(resultaatJson.toString());
+        }else{
+            return null;
+        }
+    }
+
+    @GetMapping("/account/updatemin/{encodedaccountid}/{encodedsaldo}/{encodedgebruikersid}/{encodedtoken}")
+    public void updateUserMin(@PathVariable String encodedgebruikersid,
+                          @PathVariable String encodedtoken,
+                          @PathVariable String encodedaccountid,
+                             @PathVariable String encodedsaldo) throws SQLException, ClassNotFoundException {
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGb = URLDecoder.decode(encodedgebruikersid.replace( "+", "%2B" ));
+        int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedAId = URLDecoder.decode(encodedaccountid.replace( "+", "%2B" ));
+        int accountId = Integer.parseInt(AESCryption.decrypt(urlDecodedAId));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedtoken.replace( "+", "%2B" ));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String saldoDecoded = URLDecoder.decode(encodedsaldo.replace( "+", "%2B" ));
+        double saldo = Double.parseDouble(AESCryption.decrypt(saldoDecoded));
+
+        System.out.println(accountId + " " + saldo);
+        if(accountDAO.checkAuthentication(gebruikersid,token)) {
+           accountDAO.updateSaldoMin(accountId,saldo);
+        }
+    }
+
+    @GetMapping("/account/updateplus/{encodedaccountid}/{encodedsaldo}/{encodedgebruikersid}/{encodedtoken}")
+    public String updateUserPlus(@PathVariable String encodedgebruikersid,
+                           @PathVariable String encodedtoken,
+                           @PathVariable String encodedaccountid,
+                           @PathVariable String encodedsaldo) throws SQLException, ClassNotFoundException {
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGb = URLDecoder.decode(encodedgebruikersid.replace("+", "%2B"));
+        int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedAId = URLDecoder.decode(encodedaccountid.replace("+", "%2B"));
+        int accountId = Integer.parseInt(AESCryption.decrypt(urlDecodedAId));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedtoken.replace("+", "%2B"));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String saldoDecoded = URLDecoder.decode(encodedsaldo.replace("+", "%2B"));
+        double saldo = Double.parseDouble(AESCryption.decrypt(saldoDecoded));
+
+        System.out.println(accountId + " " + saldo);
+        if (accountDAO.checkAuthentication(gebruikersid, token)) {
+            try {
+                accountDAO.updateSaldoPlus(accountId, saldo);
+                JsonObject resultaatJson = new JsonObject();
+                resultaatJson.addProperty("resultaat", "true");
+                return AESCryption.encrypt(resultaatJson.toString());
+            } catch (Exception e) {
+                JsonObject resultaatJson = new JsonObject();
+                resultaatJson.addProperty("resultaat", "false");
+                return AESCryption.encrypt(resultaatJson.toString());
+            }
+        }
+        JsonObject resultaatJson = new JsonObject();
+        resultaatJson.addProperty("resultaat", "false");
+        return AESCryption.encrypt(resultaatJson.toString());
     }
 }

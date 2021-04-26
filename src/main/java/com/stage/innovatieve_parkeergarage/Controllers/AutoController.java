@@ -41,7 +41,6 @@ public class AutoController {
 
         if (accountDAO.checkAuthentication(id, token)) {
             Auto auto = autoDAO.getCarByPlate(kenteken);
-            System.out.println(auto.getAuto_Id());
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("AutoId", auto.getAuto_Id());
             return AESCryption.encrypt(jsonObject.toString());
@@ -109,6 +108,37 @@ public class AutoController {
                 jsonObject.addProperty("resultaat", "false");
                 return AESCryption.encrypt(jsonObject.toString());
             }
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("resultaat", "false");
+        return AESCryption.encrypt(jsonObject.toString());
+    }
+
+    //Get rest api om alle auto's op te halen in een JSON format
+    @GetMapping("/deleteauto/{encodedautoid}/{encodeduserId}/{encodedToken}")
+    public String deleteAuto(@PathVariable String encodedautoid,
+                          @PathVariable String encodeduserId,
+                          @PathVariable String encodedToken) throws SQLException, ClassNotFoundException {
+
+        JsonArray jsonArray = new JsonArray();
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedToken.replace("+", "%2B"));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String idDecoded = URLDecoder.decode(encodeduserId.replace("+", "%2B"));
+        int id = Integer.parseInt(AESCryption.decrypt(idDecoded));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String autoidDecoded = URLDecoder.decode(encodedautoid.replace("+", "%2B"));
+        int autoid = Integer.parseInt(AESCryption.decrypt(autoidDecoded));
+
+
+        if (accountDAO.checkAuthentication(id, token)) {
+            String resultaat = autoDAO.verwijderAuto(autoid);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("resultaat", resultaat);
+            return AESCryption.encrypt(jsonObject.toString());
         }
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("resultaat", "false");

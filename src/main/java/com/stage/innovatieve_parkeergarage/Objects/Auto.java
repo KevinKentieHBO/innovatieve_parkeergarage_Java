@@ -15,6 +15,10 @@ public class Auto {
         this.auto_Kenteken = auto_Kenteken;
     }
 
+    public Auto() {
+
+    }
+
     //Geeft auto id terug
     public int getAuto_Id() {
         return auto_Id;
@@ -23,5 +27,13 @@ public class Auto {
     //geeft auto kenteken terug
     public String getAuto_Kenteken() {
         return auto_Kenteken;
+    }
+
+    public void setAuto_Id(int auto_Id) {
+        this.auto_Id = auto_Id;
+    }
+
+    public void setAuto_Kenteken(String auto_Kenteken) {
+        this.auto_Kenteken = auto_Kenteken;
     }
 }

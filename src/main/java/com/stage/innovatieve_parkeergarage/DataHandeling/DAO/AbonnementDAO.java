@@ -10,4 +10,6 @@ public interface AbonnementDAO {
     public ArrayList<Abonnement> getAbonnementenParkeergarage(int id) throws SQLException, ClassNotFoundException;
 
     public ArrayList<Abonnement> getAbonnementenAutoId(int autoid) throws ClassNotFoundException, SQLException;
+
+    ArrayList<Abonnement> getAbonnementenAutoIdParkeergarage(int autoId, int garageId) throws ClassNotFoundException, SQLException;
 }

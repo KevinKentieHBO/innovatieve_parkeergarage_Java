@@ -4,10 +4,9 @@ import com.stage.innovatieve_parkeergarage.DataHandeling.DAO.AutoDAO;
 import com.stage.innovatieve_parkeergarage.DataHandeling.SQLite_Con;
 import com.stage.innovatieve_parkeergarage.Objects.Auto;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 //Deze klassen is een zorgt voor het aanroepen en uitvoeren van statements naar de database
@@ -27,10 +26,12 @@ public class AutoDAOImplementatie implements AutoDAO {
 
     @Override
     public Auto getCarByPlate(String auto_Kenteken) throws ClassNotFoundException, SQLException {
+        Auto auto = new Auto();
         Connection connection = new SQLite_Con().makeConnection();
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("select * from Auto WHERE Auto_Kenteken = '"+auto_Kenteken+"'");
-        Auto auto = new Auto(rs.getInt(1),rs.getString(2));
+        auto.setAuto_Id(rs.getInt(1));
+        auto.setAuto_Kenteken(rs.getString(2));
         rs.close();
         connection.close();
         return auto;
@@ -65,6 +66,35 @@ public class AutoDAOImplementatie implements AutoDAO {
             return true;
         }catch (Exception e) {
             return false;
+        }
+    }
+
+    @Override
+    public String verwijderAuto(int autoid) throws ClassNotFoundException, SQLException {
+        try {
+            String result = "";
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate localDate = LocalDate.now();
+            Connection connection = new SQLite_Con().makeConnection();
+            Statement statement = connection.createStatement();
+            Statement statement2 = connection.createStatement();
+            Statement statement3 = connection.createStatement();
+            Statement statement4 = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM Reservering where Reservering_Auto_Id = " + autoid + " and Reservering_Datum >= '" + dtf.format(localDate)+"'");
+            System.out.println("SELECT COUNT(*) FROM Reservering where Reservering_Auto_Id = " + autoid + " and Reservering_Datum >= '" + dtf.format(localDate)+"'");
+            if(rs.getInt(1) == 0){
+                statement4.executeUpdate("DELETE FROM RESERVERING WHERE Reservering_Auto_Id = " +autoid);
+                statement3.executeUpdate("DELETE FROM BESTUURDER_AUTO WHERE Bestuurder_Auto_Auto_Id = "+autoid);
+                statement2.executeUpdate("DELETE FROM AUTO WHERE Auto_Id = " +autoid);
+                result = "Verwijderen is geslaagd";
+            }else{
+                result = "Verwijderen van een auto met reserveringen is niet mogelijk";
+            }
+            rs.close();
+            connection.close();
+            return result;
+        }catch (Exception e) {
+            return e.toString();
         }
     }
 }

@@ -135,4 +135,51 @@ public class AbonnementController {
             return null;
         }
     }
+
+    //Functie die met een Get Rest Api alle abonnementen van een parkeergarage in JSON format beschikbaar stelt.
+    @GetMapping("/abonnement/{encodedautoid}/{encodedgarageid}/{encodeduserId}/{encodedToken}")
+    public String GetAllAbonnementenParkeergarage(@PathVariable String encodedautoid,
+                                                  @PathVariable String encodedgarageid,
+                                                  @PathVariable String encodeduserId,
+                                                  @PathVariable String encodedToken) throws SQLException, ClassNotFoundException {
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecoded = URLDecoder.decode(encodedautoid.replace("+", "%2B"));
+        int autoId = Integer.parseInt(AESCryption.decrypt(urlDecoded));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGId = URLDecoder.decode(encodedgarageid.replace("+", "%2B"));
+        int garageId = Integer.parseInt(AESCryption.decrypt(urlDecodedGId));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedToken.replace("+", "%2B"));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String idDecoded = URLDecoder.decode(encodeduserId.replace("+", "%2B"));
+        int userId = Integer.parseInt(AESCryption.decrypt(idDecoded));
+
+        if (accountDAO.checkAuthentication(userId, token)) {
+            JsonArray abonnementenJsonArray = new JsonArray();
+            ArrayList<Abonnement> abonnementArrayList = abonnementDAO.getAbonnementenAutoIdParkeergarage(autoId, garageId);
+            for (Abonnement abonnement : abonnementArrayList) {
+                if (abonnement.isAbonnementActief() == "Actief") {
+                    JsonObject abonnementJson = new JsonObject();
+                    abonnementJson.addProperty("abonnement_Id", abonnement.getId());
+                    abonnementJson.addProperty("abonnement_Tarief", abonnement.getJaartarief());
+                    abonnementJson.addProperty("abonnement_Type", abonnement.getAbonnement_type().getNaam());
+                    abonnementJson.addProperty("abonnement_Beschrijving", abonnement.getAbonnement_type().getBeschrijving());
+                    abonnementJson.addProperty("abonnement_Begindatum", abonnement.getBegindatum());
+                    abonnementJson.addProperty("abonnement_Einddatum", abonnement.getEinddatum());
+                    abonnementJson.addProperty("abonnement_Status", abonnement.isAbonnementActief());
+                    abonnementJson.addProperty("parkeergarage_Naam", abonnement.getParkeergarage().getParkeergarage_Naam());
+                    abonnementenJsonArray.add(abonnementJson);
+                }
+            }
+            return AESCryption.encrypt(abonnementenJsonArray.toString());
+        }
+        else{
+            return null;
+        }
+    }
 }

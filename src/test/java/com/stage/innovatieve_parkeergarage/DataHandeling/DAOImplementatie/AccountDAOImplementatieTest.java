@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -37,6 +38,16 @@ class AccountDAOImplementatieTest {
         when(mock.getUserData(1)).thenReturn(new Account(1,null,"Kevin","kevin@hotmail.com","123",12.12));
         Account value = mock.getUserData(1);
         assertEquals("Kevin", value.getAccount_Gebruikersnaam());
+    }
+
+    @Test
+    void checkSaldo(){
+        AccountDAO mock = Mockito.mock(AccountDAOImplementatie.class);
+        when(mock.checkSaldo(1,1)).thenReturn(Collections.singletonList(true));
+        when(mock.checkSaldo(1,2)).thenReturn(Collections.singletonList(false));
+        assertEquals(mock.checkSaldo(1,1),true);
+        assertEquals(mock.checkSaldo(1,2),false);
+
     }
 
 }

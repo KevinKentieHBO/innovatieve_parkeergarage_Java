@@ -150,4 +150,60 @@ public class ReserveringDAOImplementatie implements ReserveringDAO {
             return false;
         }
     }
+
+    @Override
+    public Reservering getReserveringPython(int autoId, String datum, int parkeergarageId) throws ClassNotFoundException, SQLException {
+        ParkeerplaatsDAO parkeerplaatsDAO = new ParkeerplaatsDAOImplementatie();
+        Connection connection = new SQLite_Con().makeConnection();
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("select * from Reservering,Parkeerplaats,Parkeergarage where Reservering_Parkeerplaats_Id = Parkeerplaats_Id and Parkeergarage_Id = Parkeerplaats_Parkeergarage_Id and Reservering_Auto_Id = " + autoId + " and Reservering_Datum = '" + datum + "' and Parkeergarage_Id = " + parkeergarageId);
+        Reservering res = new Reservering(rs.getInt(1), parkeerplaatsDAO.getReserveringParkingspotGet(rs.getInt(1)), rs.getString(3), rs.getString(4), rs.getString(5), null);
+        rs.close();
+        connection.close();
+        return res;
+    }
+
+    @Override
+    public void updateInrijtijd(int resId, String tijd) throws ClassNotFoundException, SQLException {
+        Connection connection = new SQLite_Con().makeConnection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("UPDATE Reservering SET Resevering_Inrijtijd = '"+tijd+"' WHERE Reservering_Id = " + resId);
+        connection.close();
+    }
+
+    @Override
+    public void updateUitrijtijd(int resId, String tijd) throws ClassNotFoundException, SQLException {
+        Connection connection = new SQLite_Con().makeConnection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("UPDATE Reservering SET Reservering_Uitrijtijd = '"+tijd+"' WHERE Reservering_Id = " + resId);
+        connection.close();
+    }
+
+    @Override
+    public Reservering getTijden(int resId) throws ClassNotFoundException, SQLException {
+        ParkeerplaatsDAO parkeerplaatsDAO = new ParkeerplaatsDAOImplementatie();
+        Connection connection = new SQLite_Con().makeConnection();
+        Statement statement = connection.createStatement();
+        System.out.println("SELECT * FROM Reservering where Reservering_Id = " + resId);
+        ResultSet rs = statement.executeQuery("SELECT * FROM Reservering where Reservering_Id = " + resId);
+        Reservering res = new Reservering(rs.getInt(1), parkeerplaatsDAO.getReserveringParkingspotGet(rs.getInt(1)), rs.getString(3), rs.getString(4), rs.getString(5), null);
+        res.setInrijtijd(rs.getString(7));
+        res.setUitrijtijd(rs.getString(8));
+        rs.close();
+        connection.close();
+        return res;
+    }
+
+    @Override
+    public Reservering getInrijtijd(int resId) throws ClassNotFoundException, SQLException {
+        ParkeerplaatsDAO parkeerplaatsDAO = new ParkeerplaatsDAOImplementatie();
+        Connection connection = new SQLite_Con().makeConnection();
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM Reservering where Reservering_Id = " + resId);
+        Reservering res = new Reservering(rs.getInt(1), parkeerplaatsDAO.getReserveringParkingspotGet(rs.getInt(1)), rs.getString(3), rs.getString(4), rs.getString(5), null);
+        res.setInrijtijd(rs.getString(7));
+        rs.close();
+        connection.close();
+        return res;
+    }
 }

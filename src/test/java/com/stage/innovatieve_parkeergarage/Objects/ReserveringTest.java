@@ -1,7 +1,6 @@
 package com.stage.innovatieve_parkeergarage.Objects;
 
 import org.junit.jupiter.api.Test;
-
 import java.text.ParseException;
 import java.util.Date;
 
@@ -104,5 +103,42 @@ class ReserveringTest {
         assertEquals(false,check7);
         assertEquals(true,check8);
         assertEquals(true,check9);
+    }
+
+    @Test
+    void setInrijtijd(){
+        reservering.setInrijtijd("13:00");
+        assertEquals("13:00",reservering.getInrijtijd());
+    }
+
+    @Test
+    void getInrijtijd(){
+        reservering.setInrijtijd("13:00");
+        assertEquals("13:00",reservering.getInrijtijd());
+    }
+
+    @Test
+    void setUitrijtijd(){
+        reservering.setUitrijtijd("13:00");
+        assertEquals("13:00",reservering.getUitrijtijd());
+    }
+
+    @Test
+    void getUitrijtijd(){
+        reservering.setUitrijtijd("13:00");
+        assertEquals("13:00",reservering.getUitrijtijd());
+    }
+
+    @Test
+    void checkBegintijdInrijden(){
+        Boolean check1 = reservering.checkBegintijdInrijden("10:00","11:00");
+        Boolean check2 = reservering.checkBegintijdInrijden("09:00","10:00");
+        Boolean check3 = reservering.checkBegintijdInrijden("10:30","11:00");
+        Boolean check4 = reservering.checkBegintijdInrijden("08:00","10:15");
+
+        System.out.println(check1);
+        System.out.println(check2);
+        System.out.println(check3);
+        System.out.println(check4);
     }
 }

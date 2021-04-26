@@ -307,4 +307,160 @@ public class ReserveringController {
             return null;
         }
     }
+
+    @GetMapping("/reserveringen/get/{encodedautoid}/{encodeddatum}/{encodedparkeergarageid}/{encodeduserId}/{encodedToken}")
+    public String getSingleReservering(@PathVariable String encodedautoid,
+                                       @PathVariable String encodeddatum,
+                                       @PathVariable String encodedparkeergarageid,
+                                       @PathVariable String encodeduserId,
+                                       @PathVariable String encodedToken) throws SQLException, ClassNotFoundException {
+
+        String urlDecodedAid = URLDecoder.decode(encodedautoid.replace("+", "%2B"));
+        int autoId = Integer.parseInt(AESCryption.decrypt(urlDecodedAid));
+
+        String urlDecodedDatum = URLDecoder.decode(encodeddatum.replace("+", "%2B"));
+        String datum = AESCryption.decrypt(urlDecodedDatum);
+
+        String urlDecodedAPId = URLDecoder.decode(encodedparkeergarageid.replace("+", "%2B"));
+        int parkeergarageId = Integer.parseInt(AESCryption.decrypt(urlDecodedAPId));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGb = URLDecoder.decode(encodeduserId.replace("+", "%2B"));
+        int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedToken.replace("+", "%2B"));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        if (accountDAO.checkAuthentication(gebruikersid, token)) {
+            Reservering reservering = reserveringDAO.getReserveringPython(autoId,datum,parkeergarageId);
+            if(reservering.checkBegintijdInrijden(reservering.getReservering_Begintijd(),reservering.getReservering_Eindtijd())) {
+                JsonObject reserveringJson = new JsonObject();
+                reserveringJson.addProperty("reservering_Id", reservering.getReservering_Id());
+                reserveringJson.addProperty("reservering_Parkeerplaats_Id", reservering.getReservering_Parkeerplaats().getParkeerplaats_Id());
+                reserveringJson.addProperty("reservering_Begintijd", reservering.getReservering_Begintijd());
+                reserveringJson.addProperty("reservering_Eindtijd", reservering.getReservering_Eindtijd());
+                reserveringJson.addProperty("reservering_Datum", reservering.getReservering_Datum());
+                reserveringJson.addProperty("reservering_Parkeerplaats_laag", reservering.getReservering_Parkeerplaats().getParkeerplaats_Laag());
+                reserveringJson.addProperty("reservering_Parkeerplaats_plek", reservering.getReservering_Parkeerplaats().getParkeerplaats_Locatie());
+                reserveringJson.addProperty("reservering_Parkeergarage", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Naam());
+                reserveringJson.addProperty("reservering_ParkeergarageLocatie", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Locatie());
+                reserveringJson.addProperty("reservering_Parkeergarage_Opening", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Opening());
+                reserveringJson.addProperty("reservering_Parkeergarage_Sluiting", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Sluiting());
+                reserveringJson.addProperty("reservering_parkeergarage_Id", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Id());
+                return AESCryption.encrypt(reserveringJson.toString());
+            }
+            else {
+                return null;
+            }
+        }else {
+            return null;
+        }
+    }
+
+    @GetMapping("/reservering/inrijtijd/{encodedtijd}/{encodedreserveringid}/{encodeduserId}/{encodedToken}")
+    public void updateInrijtijd(@PathVariable String encodedtijd,
+                                       @PathVariable String encodedreserveringid,
+                                       @PathVariable String encodeduserId,
+                                       @PathVariable String encodedToken) throws SQLException, ClassNotFoundException {
+
+        String urlDecodedRId = URLDecoder.decode(encodedreserveringid.replace("+", "%2B"));
+        int resId = Integer.parseInt(AESCryption.decrypt(urlDecodedRId));
+
+        String urlDecodedTijd = URLDecoder.decode(encodedtijd.replace("+", "%2B"));
+        String tijd = AESCryption.decrypt(urlDecodedTijd);
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGb = URLDecoder.decode(encodeduserId.replace("+", "%2B"));
+        int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedToken.replace("+", "%2B"));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        if (accountDAO.checkAuthentication(gebruikersid, token)) {
+            reserveringDAO.updateInrijtijd(resId,tijd);
+        }
+    }
+
+    @GetMapping("/reservering/uitrijtijd/{encodedtijd}/{encodedreserveringid}/{encodeduserId}/{encodedToken}")
+    public void updateUitrijtijd(@PathVariable String encodedtijd,
+                                @PathVariable String encodedreserveringid,
+                                @PathVariable String encodeduserId,
+                                @PathVariable String encodedToken) throws SQLException, ClassNotFoundException {
+
+        String urlDecodedRId = URLDecoder.decode(encodedreserveringid.replace("+", "%2B"));
+        int resId = Integer.parseInt(AESCryption.decrypt(urlDecodedRId));
+
+        String urlDecodedTijd = URLDecoder.decode(encodedtijd.replace("+", "%2B"));
+        String tijd = AESCryption.decrypt(urlDecodedTijd);
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGb = URLDecoder.decode(encodeduserId.replace("+", "%2B"));
+        int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedToken.replace("+", "%2B"));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        if (accountDAO.checkAuthentication(gebruikersid, token)) {
+            reserveringDAO.updateUitrijtijd(resId,tijd);
+        }
+    }
+
+    @GetMapping("/reservering/tijden/{encodedreserveringid}/{encodeduserId}/{encodedToken}")
+    public String getTijden(@PathVariable String encodedreserveringid,
+                          @PathVariable String encodeduserId,
+                          @PathVariable String encodedToken) throws SQLException, ClassNotFoundException {
+
+        String urlDecodedRId = URLDecoder.decode(encodedreserveringid.replace("+", "%2B"));
+        int resId = Integer.parseInt(AESCryption.decrypt(urlDecodedRId));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGb = URLDecoder.decode(encodeduserId.replace("+", "%2B"));
+        int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedToken.replace("+", "%2B"));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        if (accountDAO.checkAuthentication(gebruikersid, token)) {
+            JsonObject reserveringJson = new JsonObject();
+            Reservering reservering = reserveringDAO.getTijden(resId);
+            reserveringJson.addProperty("Reservering_Inrijtijd", reservering.getInrijtijd());
+            reserveringJson.addProperty("Reservering_Uitrijtijd", reservering.getUitrijtijd());
+
+            return AESCryption.encrypt(reserveringJson.toString());
+        }else{
+            return null;
+        }
+    }
+
+    @GetMapping("/reserveringen/inrijtijd/get/{encodedreserveringid}/{encodeduserId}/{encodedToken}")
+    public String getInrijtijd(@PathVariable String encodedreserveringid,
+                            @PathVariable String encodeduserId,
+                            @PathVariable String encodedToken) throws SQLException, ClassNotFoundException {
+
+        String urlDecodedRId = URLDecoder.decode(encodedreserveringid.replace("+", "%2B"));
+        int resId = Integer.parseInt(AESCryption.decrypt(urlDecodedRId));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String urlDecodedGb = URLDecoder.decode(encodeduserId.replace("+", "%2B"));
+        int gebruikersid = Integer.parseInt(AESCryption.decrypt(urlDecodedGb));
+
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String tokenDecoded = URLDecoder.decode(encodedToken.replace("+", "%2B"));
+        String token = AESCryption.decrypt(tokenDecoded);
+
+        if (accountDAO.checkAuthentication(gebruikersid, token)) {
+            JsonObject reserveringJson = new JsonObject();
+            Reservering reservering = reserveringDAO.getInrijtijd(resId);
+            if (reservering.getInrijtijd() != null){
+                reserveringJson.addProperty("Reservering_Inrijtijd", reservering.getInrijtijd());
+            }
+            return AESCryption.encrypt(reserveringJson.toString());
+        }else{
+            return null;
+        }
+    }
 }

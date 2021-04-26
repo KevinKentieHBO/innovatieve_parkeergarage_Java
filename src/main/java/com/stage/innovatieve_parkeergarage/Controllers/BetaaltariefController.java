@@ -27,9 +27,10 @@ public class BetaaltariefController {
     AccountDAO accountDAO = new AccountDAOImplementatie();
 
     //Get rest api om alle betaaltarieven op te halen in een JSON format
-    @GetMapping("/betaaltarief/{encodeduserId}/{encodedToken}")
+    @GetMapping("/betaaltarief/{encodedparkeergarageid}/{encodeduserId}/{encodedToken}")
     public String betaaltarief(@PathVariable String encodeduserId,
-                               @PathVariable String encodedToken) throws SQLException, ClassNotFoundException {
+                               @PathVariable String encodedToken,
+                               @PathVariable String encodedparkeergarageid) throws SQLException, ClassNotFoundException {
 
         //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
         String tokenDecoded = URLDecoder.decode(encodedToken.replace( "+", "%2B" ));
@@ -39,9 +40,13 @@ public class BetaaltariefController {
         String idDecoded = URLDecoder.decode(encodeduserId.replace( "+", "%2B" ));
         int id = Integer.parseInt(AESCryption.decrypt(idDecoded));
 
+        //Decodeer de url van URLencode naar Base64, vervolgens decrypt met AES128
+        String parkeergarageIdDecoded = URLDecoder.decode(encodedparkeergarageid.replace( "+", "%2B" ));
+        int parkeergarageId = Integer.parseInt(AESCryption.decrypt(parkeergarageIdDecoded));
+
         if(accountDAO.checkAuthentication(id,token)) {
             JsonArray tariefJsonArray = new JsonArray();
-            ArrayList<Betaaltarief> tarievenArray = betaaltariefdao.getAllBetaaltarief();
+            ArrayList<Betaaltarief> tarievenArray = betaaltariefdao.getAllBetaaltariefParkeergarage(parkeergarageId);
             for (Betaaltarief tarief : tarievenArray) {
                 JsonObject betaaltariefJson = new JsonObject();
                 betaaltariefJson.addProperty("id", tarief.getBetaaltarief_Id());

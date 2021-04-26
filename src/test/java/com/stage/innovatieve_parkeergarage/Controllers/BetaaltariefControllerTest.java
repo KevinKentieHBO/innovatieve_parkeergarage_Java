@@ -23,7 +23,7 @@ class BetaaltariefControllerTest {
 
     @Test
     void betaaltarief() throws Exception {
-        String uri = "/betaaltarief/N9MXWfxo8Re%2FuD8nj13qHA==/xIas%2B9sSuoSyH%2B5Wis3p610yZb1%2B4rIVlj13LKx1qo%2FS9NPQ8fByMr5DIj%2FF0R%2Fj";
+        String uri = "/betaaltarief/N9MXWfxo8Re%2FuD8nj13qHA==/N9MXWfxo8Re%2FuD8nj13qHA==/xIas%2B9sSuoSyH%2B5Wis3p610yZb1%2B4rIVlj13LKx1qo%2FS9NPQ8fByMr5DIj%2FF0R%2Fj";
         MvcResult mvcResult = mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
