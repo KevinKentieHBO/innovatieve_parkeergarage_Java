@@ -131,10 +131,10 @@ class ReserveringTest {
 
     @Test
     void checkBegintijdInrijden(){
-        Boolean check1 = reservering.checkBegintijdInrijden("10:00","11:00");
-        Boolean check2 = reservering.checkBegintijdInrijden("09:00","10:00");
-        Boolean check3 = reservering.checkBegintijdInrijden("10:30","11:00");
-        Boolean check4 = reservering.checkBegintijdInrijden("08:00","10:15");
+        String check1 = reservering.checkBegintijdInrijden("10:00","11:00");
+        String check2 = reservering.checkBegintijdInrijden("09:00","10:00");
+        String check3 = reservering.checkBegintijdInrijden("10:30","11:00");
+        String check4 = reservering.checkBegintijdInrijden("18:00","20:15");
 
         System.out.println(check1);
         System.out.println(check2);

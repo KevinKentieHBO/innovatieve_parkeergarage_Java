@@ -135,8 +135,8 @@ public class Reservering {
     }
 
     //Deze functie checkt of de huidige tijd tussen de begintijd van de reservering of een uur eerder ligt.
-    public Boolean checkBegintijdInrijden(String checkTijd, String eindtijd) {
-        Boolean uitkomst = false;
+    public String checkBegintijdInrijden(String checkTijd, String eindtijd) {
+        String uitkomst = "0";
         try {
             String string1 = eindtijd;
             Date time1 = new SimpleDateFormat("HH:mm").parse(string1);
@@ -165,7 +165,13 @@ public class Reservering {
 
             Date x = calendar3.getTime();
             if (x.after(calendar2.getTime()) && x.before(calendar1.getTime())) {
-                uitkomst = true;
+                uitkomst = "1";
+            }
+            else if(x.after(calendar1.getTime())){
+                uitkomst = "2";
+            }
+            else if (x.before(calendar2.getTime())){
+                uitkomst = "3";
             }
         } catch (ParseException e) {
             e.printStackTrace();

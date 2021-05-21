@@ -45,8 +45,8 @@ class AccountDAOImplementatieTest {
         AccountDAO mock = Mockito.mock(AccountDAOImplementatie.class);
         when(mock.checkSaldo(1,1)).thenReturn(Collections.singletonList(true));
         when(mock.checkSaldo(1,2)).thenReturn(Collections.singletonList(false));
-        assertEquals(mock.checkSaldo(1,1),true);
-        assertEquals(mock.checkSaldo(1,2),false);
+        assertEquals(mock.checkSaldo(1,1),Collections.singletonList(true));
+        assertEquals(mock.checkSaldo(1,2),Collections.singletonList(false));
 
     }
 

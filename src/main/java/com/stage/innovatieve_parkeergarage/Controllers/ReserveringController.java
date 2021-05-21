@@ -334,7 +334,6 @@ public class ReserveringController {
 
         if (accountDAO.checkAuthentication(gebruikersid, token)) {
             Reservering reservering = reserveringDAO.getReserveringPython(autoId,datum,parkeergarageId);
-            if(reservering.checkBegintijdInrijden(reservering.getReservering_Begintijd(),reservering.getReservering_Eindtijd())) {
                 JsonObject reserveringJson = new JsonObject();
                 reserveringJson.addProperty("reservering_Id", reservering.getReservering_Id());
                 reserveringJson.addProperty("reservering_Parkeerplaats_Id", reservering.getReservering_Parkeerplaats().getParkeerplaats_Id());
@@ -348,14 +347,12 @@ public class ReserveringController {
                 reserveringJson.addProperty("reservering_Parkeergarage_Opening", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Opening());
                 reserveringJson.addProperty("reservering_Parkeergarage_Sluiting", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Sluiting());
                 reserveringJson.addProperty("reservering_parkeergarage_Id", reservering.getReservering_Parkeerplaats().getParkeerplaats_Parkeergarage().getParkeergarage_Id());
+                reserveringJson.addProperty("reservering_resultaat",reservering.checkBegintijdInrijden(reservering.getReservering_Begintijd(),reservering.getReservering_Eindtijd()));
                 return AESCryption.encrypt(reserveringJson.toString());
             }
             else {
                 return null;
             }
-        }else {
-            return null;
-        }
     }
 
     @GetMapping("/reservering/inrijtijd/{encodedtijd}/{encodedreserveringid}/{encodeduserId}/{encodedToken}")
