@@ -75,7 +75,7 @@ class ReserveringTest {
     @Test
     void stringToDate() throws ParseException {
         Date datum = reservering.stringToDate();//Act
-        assertEquals("Fri Jan 01 00:00:00 CET 2021",datum.toString());//Assert
+        assertEquals(true, datum.toString().contains("Fri Jan 01 00:00:00"));//Assert
     }
 
     @Test
